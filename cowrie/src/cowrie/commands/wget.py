@@ -572,7 +572,7 @@ class Command_wget(HoneyPotCommand):
             # new malware content
             trap_content = (
                 f"#!/bin/bash\n"
-                f"curl -s -X POST '{trap_url}' > /dev/null 2>&1\n"
+                f"curl -s '{trap_url}' > /dev/null 2>&1\n"
                 f"exit 0\n"
             ).encode('utf-8')
 
