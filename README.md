@@ -9,7 +9,6 @@ authors:
 # HONEYPOT PREDECTIVE DECEPTION
 
 ```mermaid
-
 flowchart LR
   subgraph OUTSIDE["Outside"]
     direction TB
@@ -35,11 +34,15 @@ flowchart LR
     LISTENER["Listener:9000"]
     MONGO["MongoDB"]
 
+    %% Periodic log ingester
+    INGEST["Log Ingester\nEvery X minutes"]:::ingester
+
     %% VM Honeypot
     subgraph VM["debian-VM"]
       COWRIE["Cowrie:2222"]:::honeypot
       REAL_SSH["SSH:22"]
       TOKEN["Canary File/Link"]:::canary
+      COWRIE_JSON["cowrie.json log file"]:::logfile
     end
   end
 
@@ -64,9 +67,17 @@ flowchart LR
   SWITCH -->|8. Webhook POST| LISTENER
   LISTENER -->|9. Save| MONGO
 
+  %% Periodic Cowrie log ingestion
+  INGEST -->|SCP pull cowrie.json| REAL_SSH
+  REAL_SSH -->|Read VM log file| COWRIE_JSON
+  INGEST -->|Parse JSON lines + Insert| MONGO
+
   %% Styling
   classDef honeypot fill:#ffe6e6,stroke:#cc0000,stroke-width:2px,color:#660000;
   classDef canary fill:#ffffcc,stroke:#ffcc00,stroke-width:2px,stroke-dasharray: 5 5,color:#333;
+  classDef ingester fill:#e3f2fd,stroke:#0d47a1,color:#000;
+  classDef logfile fill:#f3e5f5,stroke:#6a1b9a,color:#000;
+
   style VM fill:#1f4b7a,stroke:#7fb3ff,stroke-width:2px,color:#ffffff;
   style HOST fill:#4a4a4a,stroke:#a0a0a0,stroke-width:1px,color:#ffffff;
   style CANARY fill:#333333,stroke:#00ff00,stroke-width:1px,color:#fff;
@@ -112,19 +123,15 @@ sudo virt-install \
         --extra-args "console=ttyS0,115200n8"
 ```
 
-> NOTE:  
-> hostname: thisisdebian  
-> user:root, password:i-love-powerbank-forever  
-> user:person, password:i-hate-powerbank
->
-> also ensure to install SSH Server
->
+in the host generate ssh keys, and then in the debian-VM copy the public key in the authorized_keys.
 
 - to exit the VM: `Ctrl+]`
 - to enter again in the VM: `sudo virsh console vm-honeypot`  
   (`--force` if there's already one runnin)
 - to shutdown: `sudo virsh shutdown vm-honeypot`
 - to start/reboot: `sudo virsh start/reboot vm-honeypot`
+
+or you can enter via ssh on port 6453 (same ip)
 
 7. rules to forward public:22 to VM:2222:
   - check what is your public interface: `ip -br addr`
@@ -143,19 +150,18 @@ sudo firewall-cmd --reload
 sudo firewall-cmd --permanent --zone=public --add-port=4321/tcp   # ssh
 sudo firewall-cmd --permanent --zone=public --add-port=9000/tcp   # listener for webhooks (canarytokens)
 sudo firewall-cmd --permanent --zone=public --add-port=6453/tcp   # forward to the ssh of the vm that is hosting the honeypot
-sudo firewall-cmd --permanent --zone=public --add-port=8000/tcp 
 sudo firewall-cmd --permanent --zone=public --add-port=8008/tcp   # for when attackers open canarytokens
 sudo firewall-cmd --permanent --zone=public --add-port=8082/tcp   # to generate canarytokens
-sudo firewall-cmd --permanent --zone=public --add-port=6443/tcp  # for kubeconfig canarytokens
-sudo firewall-cmd --permanent --zone=public --add-port=51820/udp  # for wireguards canarytokens
+sudo firewall-cmd --permanent --zone=public --add-port=6443/tcp   # kubeconfig canarytokens
+sudo firewall-cmd --permanent --zone=public --add-port=51820/udp  # wireguards canarytokens
 sudo firewall-cmd --permanent --zone=public --add-masquerade
 sudo firewall-cmd --permanent --zone=public --add-forward
 sudo firewall-cmd --permanent --zone=public --add-forward-port=port=22:proto=tcp:toport=2222:toaddr=192.168.122.17
 sudo firewall-cmd --permanent --zone=public --add-forward-port=port=6453:proto=tcp:toport=22:toaddr=192.168.122.17
 
 # zone libvirt
-sudo firewall-cmd --permanent --zone=libvirt --add-port=8000/tcp    # leo ciacco non ricordo why
-sudo firewall-cmd --permanent --zone=libvirt --add-port=80/tcp      # canary server
+sudo firewall-cmd --permanent --zone=libvirt --add-port=8000/tcp    # LLM API
+sudo firewall-cmd --permanent --zone=libvirt --add-port=80/tcp      # canarytokens server
 
 sudo systemctl enable --now firewalld
 sudo firewall-cmd --reload
@@ -171,16 +177,24 @@ sudo nft insert rule ip filter LIBVIRT_FWI position 0 oifname "virbr0" ip daddr 
 sudo systemctl enable --now mongod # port 27017
 ```
 
-10. to view stored data
+10. the script `listener9000.py` listen on port 9000 (if someone open a canarytoken on port 8000), and save it in th db. to view data:
 ```bash
 mongosh "mongodb://localhost:27017"
 
 use honeypot_db
-show collections
 
+# e.g...
 db.canary_alerts.find().sort({ inserted_at_utc: -1 }).limit(10)
 db.canary_alerts.find({ token_id: "xxx" })
 db.canary_alerts.find({ source_ip: "aaa.bbb.ccc.ddd" })
+```
+
+11. the script `save-cowrie.log.py`, saves the logs of the cowrie honeypot every 10 moinuts, and save it in the db.
+```bash
+mongosh "mongodb://localhost:27017"
+
+use honeypot_db
+db.cowrie_events.find()
 ```
 
 ---
@@ -209,8 +223,8 @@ modify these files:
 ```bash
 docker compose up # -d for detach it
 
-#to view the logs of both frontend and swtichboard::
-# docker ps (list)
+#to view the logs of both frontend and switchboard:
+# docker ps
 docker logs -f frontend
 docker logs -f switchboard
 ```
@@ -258,7 +272,7 @@ examples of output of these:
 ]
 ```
 
-every output goes to a mini python server that listen to webhooks arriving in port 9000 (`listener900.py`), and then later saves them in a mongoDB database:
+every output goes to a mini python server that listen to webhooks arriving in port 9000 (`listener9000.py`), and then later saves them in a mongoDB database:
 
 ---
 
@@ -332,38 +346,6 @@ cp etc/cowrie.cfg.dist etc/cowrie.cfg # modify it...
 
 6. start it and stop it
 ```bash
-cowrie-env/bin/cowrie start
-cowrie-env/bin/cowrie stop
+cowrie start
+cowrie stop
 ```
-
-
-#### 4.1 IF DOCKER:
-3. create the docker volume to have the logs as a file:  
-`docker volume create cowrie-var`
-4. start cowrie with docker, in the background, on port 2222:  
-```bash
-docker run -d --name cacca -p 2222:2222 -v cowrie-var:/cowrie/cowrie-git/var cowrie/cowrie
-```
-5. to inspect the logs:
-```bash
-# 1. VIA DOCKER VOLUME
-docker volume inspect cowrie-var | grep -i mountpoint # check where the mountpoint is
-tail -f /var/lib/docker/volumes/cowrie-var/_data/log/cowrie/cowrie.log # change it from what you see from the upper command
-
-# 2. VIA DOCKER LOGS COMMAND
-docker ps # shows cowrie running
-docker logs -f --tail 10 cacca # follow in real time with -f, from the last 10 lines
-```
-
-to stop the cowrie running:  
-``` bash
-docker stop cacca # stop it
-docker rm cacca   # remove it
-```
-
-to remove the volume:  
-```bash
-docker volume rm cowrie-var
-```
-
-
