@@ -1,0 +1,32 @@
+version: '3'
+services:
+  redis:
+    extends:
+      file: common-services.yml
+      service: redis_common
+  frontend:
+    extends:
+      file: common-services.yml
+      service: frontend_common
+    container_name: frontend
+    ports:
+      - "127.0.0.1:8082:8082"     # to generate canary in local
+      - "192.168.122.1:8082:8082" # to generate canary from the VM
+  switchboard:
+    extends:
+      file: common-services.yml
+      service: switchboard_common
+    container_name: switchboard
+    ports:
+      - "0.0.0.0:51820:51820/udp" # wireguard UDP
+      - "0.0.0.0:6443:6443/tcp" # kubeconfig TCP
+  nginx:
+    extends:
+      file: common-services.yml
+      service: nginx_common
+    container_name: nginx
+    ports:
+      - "0.0.0.0:8008:80"
+
+volumes:
+  log-volume:

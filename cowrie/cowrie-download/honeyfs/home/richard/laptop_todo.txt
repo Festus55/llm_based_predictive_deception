@@ -1,0 +1,4 @@
+- Update macOS
+- Install new VPN client
+- Backup Photos to external drive
+- Clear browser cache

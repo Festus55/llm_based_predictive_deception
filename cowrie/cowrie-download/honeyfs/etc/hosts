@@ -1,0 +1,6 @@
+localhost
+127.0.1.1       unibo-lab-srv01
+192.168.10.5    ldap.unibo.internal
+192.168.10.10   storage-nas-01.unibo.internal
+192.168.10.25   prof-rossi-workstation
+

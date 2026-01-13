@@ -1,0 +1,4 @@
+asset_id,hostname,role,location,owner,notes
+IT-014,unibo-lab4,ssh-honeypot,Bologna Lab,filippoc,decoy system
+IT-021,lab-switch-01,switch,Bologna Lab,netops,mgmt via console
+IT-033,lab-nas-01,storage,Bologna Lab,sysadmin,restricted access

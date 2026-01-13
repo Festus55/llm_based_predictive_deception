@@ -1,0 +1,22 @@
+version: '3'
+services:
+  redis:
+    extends:
+      file: common-services.yml
+      service: redis_common
+  frontend:
+    extends:
+      file: common-services.yml
+      service: frontend_common
+    container_name: frontend
+  switchboard:
+    extends:
+      file: common-services.yml
+      service: switchboard_common
+    container_name: switchboard
+  nginx:
+    extends:
+      file: common-services.yml
+      service: nginx_common_certbot
+volumes:
+  log-volume:

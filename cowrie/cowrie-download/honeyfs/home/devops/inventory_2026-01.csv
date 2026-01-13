@@ -1,0 +1,6 @@
+hostname,ip,role,status,last_patched
+lb-01,10.0.1.10,loadbalancer,active,2026-01-05
+web-01,10.0.1.20,webserver,active,2026-01-05
+web-02,10.0.1.21,webserver,active,2026-01-05
+db-01,10.0.2.10,database,active,2025-12-15
+cache-01,10.0.2.20,redis,active,2026-01-02

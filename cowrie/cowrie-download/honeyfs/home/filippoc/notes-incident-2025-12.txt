@@ -1,0 +1,8 @@
+[INTERNAL] Incident notes (sanitized)
+Date: 2025-12-18
+System: lab gateway
+Summary: Multiple SSH login failures observed.
+Action taken: blocked offending IPs at perimeter; rotated non-production passwords.
+Status: monitoring.
+
+NOTE: This is a decoy environment. No real credentials stored here.

@@ -1,0 +1,4 @@
+installer_linux_x64.tar.gz
+manual_v2.pdf
+screenshot_error.png
+logs_20251220.zip

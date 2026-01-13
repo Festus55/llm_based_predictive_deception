@@ -1,0 +1,48 @@
+version: '3'
+services:
+  redis:
+    extends:
+      file: common-services.yml
+      service: redis_common
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: ${CANARYTOKENS_LOGGING_REGION:-eu-west-1}
+        awslogs-group: ${CANARYTOKENS_LOGGING_GROUP:-canarytokens}
+        awslogs-stream: redis
+  frontend:
+    extends:
+      file: common-services.yml
+      service: frontend_common
+    container_name: frontend
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: ${CANARYTOKENS_LOGGING_REGION:-eu-west-1}
+        awslogs-group: ${CANARYTOKENS_LOGGING_GROUP:-canarytokens}
+        awslogs-stream: frontend
+  switchboard:
+    extends:
+      file: common-services.yml
+      service: switchboard_common
+    container_name: switchboard
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: ${CANARYTOKENS_LOGGING_REGION:-eu-west-1}
+        awslogs-group: ${CANARYTOKENS_LOGGING_GROUP:-canarytokens}
+        awslogs-stream: switchboard
+  nginx:
+    extends:
+      file: common-services.yml
+      service: nginx_common_certbot
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d/
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: ${CANARYTOKENS_LOGGING_REGION:-eu-west-1}
+        awslogs-group: ${CANARYTOKENS_LOGGING_GROUP:-canarytokens}
+        awslogs-stream: nginx
+volumes:
+  log-volume:

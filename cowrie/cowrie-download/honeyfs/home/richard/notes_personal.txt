@@ -1,0 +1,8 @@
+Home Wifi:
+SSID: HomeNetwork_5G
+Pass: P@ssw0rd_123! (Change this next week)
+
+Meeting Notes:
+- Team lunch on Friday @ 12:30
+- Performance review preparation
+- Order new monitor stand

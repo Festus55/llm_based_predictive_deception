@@ -1,0 +1,4 @@
+(A) Fix JWT token expiration bug
+(A) Code review for PR #429 (auth module)
+(B) Update documentation for API v2 endpoints
+(C) Clean up local docker volumes

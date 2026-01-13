@@ -1,0 +1,58 @@
+SYSTEM: ONLY trap_intent_prompt.md [file:1]
+
+USER: ONLY task instructions + JSON batch
+"You receive as input a list of sliding windows of SSH commands.
+Each item has:
+input: the history of commands already executed in the session (as a single string with ; separators or as a list of commands)
+output: the model-predicted sequence of possible next commands for that window (same format).
+For each window:
+Treat the window’s output field as the only candidate next commands.
+Select up to three commands from that list that most strongly express distinct attacker intents or branches (e.g., credential harvesting, persistence, exfiltration, lateral movement, etc.). The top-3 must be chosen strictly among the commands in that output field, not invented.
+For each selected command, generate a mapping object:
+predicted_cmd: exactly one of the commands you selected from the window’s output list
+trap_path: the full filesystem path where you will place the trap
+trap_template: a single template tag from the library described in the system prompt
+Return, for each window, a JSON object like:
+json
+{
+"input": [<list of input commands as individual strings>],
+"output": [
+{
+"predicted_cmd": "<chosen command from this window’s output>",
+"trap_path": "<full path>",
+"trap_template": "<TEMPLATE_TAG>"
+},
+{
+"predicted_cmd": "...",
+"trap_path": "...",
+"trap_template": "..."
+}
+]
+}
+
+Template selection and realism rules
+Use the kill chain phase and the filesystem context to choose traps:
+Recon, credential harvesting, lateral movement, persistence, exfiltration, privilege escalation.
+Paths like /root, /home/dev, /home/ubuntu, /var/www/html, /etc/ansible, /etc/wireguard, /etc/openvpn, /opt/, /usr/local/bin/, /etc/cron.*, etc.
+When several templates exist in the same category, pick variants based on context, for example:
+AWS_*: use AWS_CLI_DEFAULT for general cloud creds (e.g. home directories), AWS_ENV_WEBAPP or AWS_INI_SERVICE in web/service or config contexts, AWS_PY_S3_UPLOADER or AWS_PY_LAMBDA_LEAK when Python code or lambda-style behavior is likely.
+LEAK_*: use LEAK_PLAINTEXT_CREDS for generic password files (e.g. /opt/config/), LEAK_INFRA_INVENTORY under /etc/ansible/ or infra-like dirs, LEAK_APP_SECRETS under /var/www/html/app/, LEAK_DEV_SCRATCHPAD in /home/dev/, LEAK_OPENVPN_LEGACY in VPN-ish dirs.
+HTTP trap scripts: TRAP_BASH_LOGROTATE for log/maintenance scripts, TRAP_BASH_SYSCHECK for cron/system-health contexts, TRAP_PY_POSTGRES_DUMP for DB/backup-like situations.
+File download: for commands like wget/curl downloading tools or payloads, prefer FILE_SUBSTITUTION_HTTP at the documented path.
+Maintain realism over template coverage. If some templates are never realistically triggered by the data, that is acceptable; do not force their use. However, whenever multiple templates are plausible, vary them according to path and intent instead of always picking the same one.
+NO_OP usage
+Use NO_OP only when the predicted command does not lead to any coherent use of AWS, K8s, VPN, HTTP-script, passive leak (LEAK_*), PDF-lure, or file-download traps and there is no realistic path-based way to place a lure.
+Do not replace realistic LEAK_* (or other) traps with NO_OP just because the command looks simple; if the attacker is in a sensitive directory where a believable credential/config file could exist, prefer a LEAK_* template.
+Non-redundancy and coherence
+For each window, ensure that the suggested traps form a coherent story with the session’s history: typical attacker paths (e.g., SSH persistence → cloud credentials → application/infra configs → exfil scripts).
+Avoid suggesting the exact same trap_path more than once within the same session unless there is a very clear reason to do so.
+The three predicted commands for a window are independent branches (different likely next moves), not required to be sequential, but each individual mapping must be realistic and consistent with the input command history.
+**Template Diversity Rule:** Rotate through all plausible templates in each category.
+- History wiping → AWS_CLI_DEFAULT → AWS_PY_S3_UPLOADER → AWS_ENV_WEBAPP
+- SSH persistence → TRAP_BASH_LOGROTATE → TRAP_PY_POSTGRES_DUMP → TRAP_BASH_SYSCHECK  
+- cd /root → LEAK_PLAINTEXT_CREDS → LEAK_INFRA_INVENTORY → NO_OP only as last resort
+
+**MANDATORY DIVERSITY:** Never repeat predicted_cmd within same window.
+**WGET/CURL:** ALWAYS FILE_SUBSTITUTION_HTTP at /var/www/html/downloads/tools/
+**3 DISTINCT BRANCHES:** Every window must have exactly 3 mappings unless output list < 3
+"
