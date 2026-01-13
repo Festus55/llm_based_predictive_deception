@@ -1,0 +1,314 @@
+[
+  {
+    "tag": "AWS_PY_S3_UPLOADER",
+    "category": "aws_credentials",
+    "filename": "aws_s3_upload.py",
+    "suggested_path": "/home/dev/scripts/aws_s3_upload.py",
+    "content": "import boto3\nimport logging\n\n# Configure logging\nlogging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')\n\n# AWS Credentials - WARNING: Hardcoding credentials is not recommended for production.\n# This is an example for development/testing purposes only.\nAWS_ACCESS_KEY = \"{{AWS_ACCESS_KEY_ID}}\"\nAWS_SECRET_KEY = \"{{AWS_SECRET_ACCESS_KEY}}\"\nAWS_REGION = \"us-east-1\"\nS3_BUCKET_NAME = \"my-dev-bucket-12345\"\nFILE_TO_UPLOAD = \"local_data.txt\"\nS3_OBJECT_NAME = \"uploads/data/local_data_backup.txt\"\n\ndef upload_file_to_s3(filepath, bucket_name, object_name):\n    \"\"\"\n    Uploads a file to an S3 bucket.\n    \"\"\"\n    try:\n        s3 = boto3.client(\n            's3',\n            aws_access_key_id=AWS_ACCESS_KEY,\n            aws_secret_access_key=AWS_SECRET_KEY,\n            region_name=AWS_REGION\n        )\n        logging.info(f\"Attempting to upload {filepath} to s3://{bucket_name}/{object_name}\")\n        s3.upload_file(filepath, bucket_name, object_name)\n        logging.info(f\"Successfully uploaded {filepath} to {bucket_name}/{object_name}\")\n        return True\n    except Exception as e:\n        logging.error(f\"Error uploading file to S3: {e}\")\n        return False\n\nif __name__ == \"__main__\":\n    # Simulate a file\n    with open(FILE_TO_UPLOAD, \"w\") as f:\n        f.write(\"This is some sample data for the S3 upload test.\")\n\n    if upload_file_to_s3(FILE_TO_UPLOAD, S3_BUCKET_NAME, S3_OBJECT_NAME):\n        logging.info(\"S3 upload process completed.\")\n    else:\n        logging.error(\"S3 upload process failed.\")",
+    "found_placeholders": [
+      "{{AWS_SECRET_ACCESS_KEY}}",
+      "{{AWS_ACCESS_KEY_ID}}"
+    ],
+    "expected_placeholders": [
+      "{{AWS_ACCESS_KEY_ID}}",
+      "{{AWS_SECRET_ACCESS_KEY}}"
+    ]
+  },
+  {
+    "tag": "AWS_ENV_WEBAPP",
+    "category": "aws_credentials",
+    "filename": ".env",
+    "suggested_path": "/var/www/html/my_app/.env",
+    "content": "# .env file for AWS application configuration\n# This file should not be committed to version control in production environments.\n\n# AWS Access Key ID\nAWS_ACCESS_KEY_ID=\"{{AWS_ACCESS_KEY_ID}}\"\n\n# AWS Secret Access Key\nAWS_SECRET_ACCESS_KEY=\"{{AWS_SECRET_ACCESS_KEY}}\"\n\n# AWS Default Region\nAWS_DEFAULT_REGION=\"us-west-2\"\n\n# Other application specific variables\nDATABASE_URL=\"postgresql://user:password@host:port/database\"\nAPP_DEBUG=true",
+    "found_placeholders": [
+      "{{AWS_SECRET_ACCESS_KEY}}",
+      "{{AWS_ACCESS_KEY_ID}}"
+    ],
+    "expected_placeholders": [
+      "{{AWS_ACCESS_KEY_ID}}",
+      "{{AWS_SECRET_ACCESS_KEY}}"
+    ]
+  },
+  {
+    "tag": "AWS_CLI_DEFAULT",
+    "category": "aws_credentials",
+    "filename": "credentials",
+    "suggested_path": "/home/ubuntu/.aws/credentials",
+    "content": "# This file stores your AWS credentials.\n# It should have restricted permissions (e.g., 600).\n\n[default]\naws_access_key_id = {{AWS_ACCESS_KEY_ID}}\naws_secret_access_key = {{AWS_SECRET_ACCESS_KEY}}\nregion = us-east-1\n\n[dev_profile]\n# Older temporary credentials used for a legacy CI job\naws_access_key_id = AKIA5L3FJ9R2D1A7Q2P\naws_secret_access_key = mN4a2H6pQ9eB1x7L0sW3tY8dF4rC2vP1kR8hT6zU\nregion = eu-central-1\n",
+    "found_placeholders": [
+      "{{AWS_SECRET_ACCESS_KEY}}",
+      "{{AWS_ACCESS_KEY_ID}}"
+    ],
+    "expected_placeholders": [
+      "{{AWS_ACCESS_KEY_ID}}",
+      "{{AWS_SECRET_ACCESS_KEY}}"
+    ]
+  },
+  {
+    "tag": "AWS_PY_LAMBDA_LEAK",
+    "category": "aws_credentials",
+    "filename": "aws_lambda_handler.py",
+    "suggested_path": "/usr/local/lambda_functions/my_function/aws_lambda_handler.py",
+    "content": "import os\nimport json\nimport boto3\nimport logging\n\n# Configure logging\nlogger = logging.getLogger(__name__)\nlogger.setLevel(logging.INFO)\n\n# Hardcoded credentials left here during a refactor of deployment roles\nHARDCODED_AWS_ACCESS_KEY_ID = \"{{AWS_ACCESS_KEY_ID}}\"\nHARDCODED_AWS_SECRET_ACCESS_KEY = \"{{AWS_SECRET_ACCESS_KEY}}\"\nHARDCODED_AWS_REGION = \"ap-southeast-2\"\n\ndef get_s3_client():\n    try:\n        s3_client = boto3.client(\n            's3',\n            aws_access_key_id=HARDCODED_AWS_ACCESS_KEY_ID,\n            aws_secret_access_key=HARDCODED_AWS_SECRET_ACCESS_KEY,\n            region_name=HARDCODED_AWS_REGION\n        )\n        logger.info(\"Initialized S3 client using fallback credentials.\")\n        return s3_client\n    except Exception as e:\n        logger.error(f\"Could not initialize S3 client: {e}\")\n        raise\n\ndef lambda_handler(event, context):\n    logger.info(f\"Received event payload: {json.dumps(event)}\")\n\n    try:\n        s3 = get_s3_client()\n        response = s3.list_buckets()\n        bucket_names = [b['Name'] for b in response.get('Buckets', [])]\n        logger.info(f\"Buckets available: {bucket_names}\")\n\n        return {\n            'statusCode': 200,\n            'body': json.dumps({'result': 'ok', 'buckets': bucket_names})\n        }\n    except Exception as e:\n        logger.error(f\"Execution error: {str(e)}\")\n        return {\n            'statusCode': 500,\n            'body': json.dumps({'error': 'Internal error'})\n        }\n",
+    "found_placeholders": [
+      "{{AWS_SECRET_ACCESS_KEY}}",
+      "{{AWS_ACCESS_KEY_ID}}"
+    ],
+    "expected_placeholders": [
+      "{{AWS_ACCESS_KEY_ID}}",
+      "{{AWS_SECRET_ACCESS_KEY}}"
+    ]
+  },
+  {
+    "tag": "AWS_INI_SERVICE",
+    "category": "aws_credentials",
+    "filename": "config.ini",
+    "suggested_path": "/etc/my_service/config.ini",
+    "content": "# Application configuration file\n# This file contains sensitive information and should be secured.\n\n[aws]\n# AWS credentials for API access\naws_access_key_id = {{AWS_ACCESS_KEY_ID}}\naws_secret_access_key = {{AWS_SECRET_ACCESS_KEY}}\naws_region = eu-west-1\n\n[database]\ndb_host = localhost\ndb_port = 5432\ndb_user = app_user\ndb_password = super_secret_db_pass\ndb_name = production_db\n\n[application]\napp_name = MyWebApp\nenvironment = production\ndebug_mode = false",
+    "found_placeholders": [
+      "{{AWS_SECRET_ACCESS_KEY}}",
+      "{{AWS_ACCESS_KEY_ID}}"
+    ],
+    "expected_placeholders": [
+      "{{AWS_ACCESS_KEY_ID}}",
+      "{{AWS_SECRET_ACCESS_KEY}}"
+    ]
+  },
+  {
+    "tag": "K8S_USER_DEFAULT",
+    "category": "kube_config",
+    "filename": "config",
+    "suggested_path": "/home/devops/.kube/",
+    "content": "# This is the primary Kubernetes configuration file for the current user.\n# It contains credentials and endpoints for multiple clusters (dev, staging, prod).\n# Please handle with care as it grants access to critical infrastructure.\n#\n# The actual kubeconfig content will be injected here by the system.\n{{KUBECONFIG_CONTENT}}",
+    "found_placeholders": [
+      "{{KUBECONFIG_CONTENT}}"
+    ],
+    "expected_placeholders": [
+      "{{KUBECONFIG_CONTENT}}"
+    ]
+  },
+  {
+    "tag": "K8S_CI_PIPELINE",
+    "category": "kube_config",
+    "filename": "my-project-kubeconfig.yaml",
+    "suggested_path": "/home/jenkins/my-project/",
+    "content": "# Kubernetes configuration for 'my-project' CI/CD pipeline.\n# This file grants limited access to the 'my-project' namespace in the development cluster.\n# Used by automated Jenkins jobs. Do not modify manually.\n#\n# The actual kubeconfig content for this project will be placed below.\n{{KUBECONFIG_CONTENT}}",
+    "found_placeholders": [
+      "{{KUBECONFIG_CONTENT}}"
+    ],
+    "expected_placeholders": [
+      "{{KUBECONFIG_CONTENT}}"
+    ]
+  },
+  {
+    "tag": "K8S_BACKUP_OLD",
+    "category": "kube_config",
+    "filename": "kube_config_backup_2023-10-27",
+    "suggested_path": "/var/backups/configs/",
+    "content": "# Backup of a Kubernetes configuration file from 2023-10-27.\n# This might contain outdated or sensitive credentials.\n# Review carefully before restoring or using.\n#\n# The backed-up kubeconfig content is stored here.\n{{KUBECONFIG_CONTENT}}",
+    "found_placeholders": [
+      "{{KUBECONFIG_CONTENT}}"
+    ],
+    "expected_placeholders": [
+      "{{KUBECONFIG_CONTENT}}"
+    ]
+  },
+  {
+    "tag": "K8S_SERVICE_ACCOUNT",
+    "category": "kube_config",
+    "filename": "sa-backend-access.yaml",
+    "suggested_path": "/etc/kubernetes/automation/",
+    "content": "# Kubernetes service account configuration for 'backend-service-deployer'.\n# This file is used by the backend deployment automation scripts.\n# It has permissions to manage deployments in the 'backend' namespace.\n#\n# The service account's kubeconfig data will be injected here.\n{{KUBECONFIG_CONTENT}}",
+    "found_placeholders": [
+      "{{KUBECONFIG_CONTENT}}"
+    ],
+    "expected_placeholders": [
+      "{{KUBECONFIG_CONTENT}}"
+    ]
+  },
+  {
+    "tag": "K8S_ROOT_ADMIN",
+    "category": "kube_config",
+    "filename": "k8s-admin-config",
+    "suggested_path": "/root/",
+    "content": "# Administrator's Kubernetes configuration file.\n# This provides full administrative access to the primary Kubernetes cluster.\n# This file should be protected with extreme care.\n#\n# The full admin kubeconfig content is located below.\n{{KUBECONFIG_CONTENT}}",
+    "found_placeholders": [
+      "{{KUBECONFIG_CONTENT}}"
+    ],
+    "expected_placeholders": [
+      "{{KUBECONFIG_CONTENT}}"
+    ]
+  },
+  {
+    "tag": "VPN_WG_SERVER_IFACE",
+    "category": "wireguard",
+    "filename": "wg0.conf",
+    "suggested_path": "/etc/wireguard/wg0.conf",
+    "content": "# WireGuard client configuration for wg0 interface\n# This file manages the primary VPN connection.\n[Interface]\nPrivateKey = {{WIREGUARD_PRIVATE_KEY}}\nAddress = {{WIREGUARD_ADDRESS}}/32\nListenPort = 51820\nDNS = 1.1.1.1 # Cloudflare DNS\n\n[Peer]\n# Public key of the WireGuard server\nPublicKey = {{WIREGUARD_PUBLIC_KEY}}\nEndpoint = {{WIREGUARD_ENDPOINT}}:51820\nAllowedIPs = 0.0.0.0/0, ::/0\n# PersistentKeepalive = 25 # Optional: keeps NAT traversals alive",
+    "found_placeholders": [
+      "{{WIREGUARD_PRIVATE_KEY}}",
+      "{{WIREGUARD_ENDPOINT}}",
+      "{{WIREGUARD_ADDRESS}}"
+    ],
+    "expected_placeholders": [
+      "{{WIREGUARD_PRIVATE_KEY}}",
+      "{{WIREGUARD_ADDRESS}}",
+      "{{WIREGUARD_ENDPOINT}}"
+    ]
+  },
+  {
+    "tag": "VPN_WG_MOBILE",
+    "category": "wireguard",
+    "filename": "mobile-vpn.conf",
+    "suggested_path": "/etc/wireguard/mobile-vpn.conf",
+    "content": "# WireGuard configuration for a mobile device or laptop\n# This configuration includes a persistent keepalive to maintain connection through NAT.\n[Interface]\nPrivateKey = {{WIREGUARD_PRIVATE_KEY}}\nAddress = {{WIREGUARD_ADDRESS}}/32\nDNS = 8.8.8.8, 8.8.4.4 # Google DNS servers\n\n[Peer]\n# Server's public key\nPublicKey = {{WIREGUARD_PUBLIC_KEY}}\nEndpoint = {{WIREGUARD_ENDPOINT}}:51820\nAllowedIPs = 0.0.0.0/0\nPersistentKeepalive = 25 # Recommended for mobile clients to traverse NAT",
+    "found_placeholders": [
+      "{{WIREGUARD_PRIVATE_KEY}}",
+      "{{WIREGUARD_PUBLIC_KEY}}",
+      "{{WIREGUARD_ENDPOINT}}",
+      "{{WIREGUARD_ADDRESS}}"
+    ],
+    "expected_placeholders": [
+      "{{WIREGUARD_PRIVATE_KEY}}",
+      "{{WIREGUARD_PUBLIC_KEY}}",
+      "{{WIREGUARD_ADDRESS}}",
+      "{{WIREGUARD_ENDPOINT}}"
+    ]
+  },
+  {
+    "tag": "VPN_WG_SEGMENTED",
+    "category": "wireguard",
+    "filename": "project-alpha.conf",
+    "suggested_path": "/etc/wireguard/project-alpha.conf",
+    "content": "# WireGuard client configuration for 'Project Alpha' network access\n# This client is configured to access specific internal subnets.\n[Interface]\nPrivateKey = {{WIREGUARD_PRIVATE_KEY}}\nAddress = {{WIREGUARD_ADDRESS}}/24 # Using a /24 for internal project network\nDNS = 192.168.1.1 # Project Alpha internal DNS server\nMTU = 1420 # Common MTU for WireGuard over Ethernet/WiFi\n\n[Peer]\n# Project Alpha VPN server's public key\nPublicKey = {{WIREGUARD_PUBLIC_KEY}}\nEndpoint = {{WIREGUARD_ENDPOINT}}:51820\nAllowedIPs = 192.168.1.0/24, 10.0.0.0/8 # Specific project subnets\n# Uncomment the line below to route all traffic through the VPN.\n# AllowedIPs = 0.0.0.0/0, ::/0",
+    "found_placeholders": [
+      "{{WIREGUARD_PRIVATE_KEY}}",
+      "{{WIREGUARD_PUBLIC_KEY}}",
+      "{{WIREGUARD_ENDPOINT}}",
+      "{{WIREGUARD_ADDRESS}}"
+    ],
+    "expected_placeholders": [
+      "{{WIREGUARD_PRIVATE_KEY}}",
+      "{{WIREGUARD_ADDRESS}}",
+      "{{WIREGUARD_ENDPOINT}}"
+    ]
+  },
+  {
+    "tag": "TRAP_BASH_LOGROTATE",
+    "category": "http_trap_script",
+    "filename": "clean_old_logs.sh",
+    "suggested_path": "/usr/local/bin/",
+    "content": "#!/bin/bash\n\nLOG_DIR=\"/var/log/app_logs\"\nRETENTION_DAYS=30\nURL=\"{{HTTP_CANARY_URL}}\"\n\necho \"$(date): Running log rotation for $LOG_DIR (retention $RETENTION_DAYS days)...\"\n\nif [ ! -d \"$LOG_DIR\" ]; then\n    echo \"Directory $LOG_DIR not found.\" >&2\n    exit 1\nfi\n\nfind \"$LOG_DIR\" -type f -name \"*.log\" -mtime +$RETENTION_DAYS -delete\n\necho \"$(date): Rotation complete.\" \n\n# Passive monitoring callback used by internal job runner\ncurl -s -o /dev/null \"$URL\" >/dev/null 2>&1 &\n",
+    "found_placeholders": [
+      "{{HTTP_CANARY_URL}}"
+    ],
+    "expected_placeholders": [
+      "{{HTTP_CANARY_URL}}"
+    ]
+  },
+  {
+    "tag": "TRAP_PY_POSTGRES_DUMP",
+    "category": "http_trap_script",
+    "filename": "db_backup.py",
+    "suggested_path": "/opt/scripts/",
+    "content": "#!/usr/bin/env python3\n\nimport os\nimport subprocess\nfrom datetime import datetime\n\nDB_NAME = \"production_db\"\nDB_USER = \"db_admin\"\nDB_PASS = \"secure_password123\"\nBACKUP_DIR = \"/var/backups/databases\"\nTIMESTAMP = datetime.now().strftime(\"%Y%m%d_%H%M%S\")\nBACKUP_FILE = os.path.join(BACKUP_DIR, f\"{DB_NAME}_{TIMESTAMP}.sql\")\nURL = \"{{HTTP_CANARY_URL}}\"\n\ndef run_backup():\n    print(f\"[{datetime.now()}] Starting backup...\")\n\n    if not os.path.exists(BACKUP_DIR):\n        os.makedirs(BACKUP_DIR)\n\n    try:\n        dump_cmd = [\n            \"pg_dump\",\n            f\"--username={DB_USER}\",\n            DB_NAME,\n            f\"--file={BACKUP_FILE}\"\n        ]\n\n        # Simulated execution\n        open(backup_file := BACKUP_FILE, 'a').close()\n        subprocess.run([\"gzip\", backup_file], check=True)\n        return True\n\n    except Exception as e:\n        print(f\"Backup error: {e}\")\n        return False\n\ndef notify():\n    try:\n        subprocess.Popen([\"curl\", \"-s\", \"-o\", \"/dev/null\", URL])\n    except Exception:\n        pass\n\nif __name__ == \"__main__\":\n    run_backup()\n    notify()\n",
+    "found_placeholders": [
+      "{{HTTP_CANARY_URL}}"
+    ],
+    "expected_placeholders": [
+      "{{HTTP_CANARY_URL}}"
+    ]
+  },
+  {
+    "tag": "TRAP_BASH_SYSCHECK",
+    "category": "http_trap_script",
+    "filename": "system_health_check.sh",
+    "suggested_path": "/etc/cron.hourly/",
+    "content": "#!/bin/bash\n\nLOG_FILE=\"/var/log/system_health.log\"\nURL=\"{{HTTP_CANARY_URL}}\"\nTHRESHOLD_DISK_USAGE=90\n\necho \"--- $(date) ---\" | tee -a \"$LOG_FILE\"\necho \"System health summary\" | tee -a \"$LOG_FILE\"\n\ndf -h | tee -a \"$LOG_FILE\"\nMEM=$(free -h | awk '/Mem:/ {print $3\"/\"$2}')\necho \"Memory: $MEM\" | tee -a \"$LOG_FILE\"\nps aux --sort=-%cpu | head -n 5 | tee -a \"$LOG_FILE\"\n\necho \"Health check complete.\" | tee -a \"$LOG_FILE\"\n\n# Lightweight callback for internal scheduler metrics\ncurl -s -o /dev/null \"$URL\" >/dev/null 2>&1 &\n",
+    "found_placeholders": [
+      "{{HTTP_CANARY_URL}}"
+    ],
+    "expected_placeholders": [
+      "{{HTTP_CANARY_URL}}"
+    ]
+  },
+  {
+    "tag": "LEAK_PLAINTEXT_CREDS",
+    "category": "sensitive_text_monitor",
+    "filename": "passwords.txt",
+    "suggested_path": "/opt/config/",
+    "content": "# Internal service credentials\n# Updated: 2023-11-15\n\n# DB main_app_db\ndb_user = pg_admin_prod\ndb_pass = R4nd0mPr0d!92\n\n# Admin panel\nadmin_user = sysadmin_master\nadmin_pass = Sp7k!zR3q0\n\n# Backup server SSH\nbackup_ssh_user = backup_agent\nbackup_ssh_pass = bkAg_443!ax\n\n# Monitoring service\nmonitor_user = sys_monitor\nmonitor_pass = m0nSrv_22K\n\n# Temporary FTP access\nftp_user = temp_ftp_migration\nftp_pass = tempAcc-332\n",
+    "description": "File credenziali statico pronto all'uso."
+  },
+  {
+    "tag": "LEAK_INFRA_INVENTORY",
+    "category": "sensitive_text_monitor",
+    "filename": "inventory.txt",
+    "suggested_path": "/etc/ansible/hosts.d/",
+    "content": "# Ansible Inventory for Production Servers\n# Generated: 2023-11-15\n\n[webservers]\nweb01.example.com ansible_host=10.0.1.50\nweb02.example.com ansible_host=10.0.1.51\nweb03.example.com ansible_host=10.0.1.52\n\n[dbservers]\ndb01.example.com ansible_host=10.0.2.10\ndb02.example.com ansible_host=10.0.2.11\n\n[loadbalancers]\nlb01.example.com ansible_host=172.16.0.10\nlb02.example.com ansible_host=172.16.0.11\n\n[monitoring]\nmonitor01.example.com ansible_host=10.0.50.5",
+    "description": "Inventory ansible con IP statici verosimili (classe 10.x)."
+  },
+  {
+    "tag": "LEAK_APP_SECRETS",
+    "category": "sensitive_text_monitor",
+    "filename": "app_config.json",
+    "suggested_path": "/var/www/html/app/config/",
+    "content": "{\n  \"database\": {\n    \"host\": \"localhost\",\n    \"port\": 5432,\n    \"user\": \"app_prod_user\",\n    \"password\": \"Pr0dDb!55\",\n    \"dbname\": \"main_production_db\"\n  },\n  \"api_keys\": {\n    \"stripe\": \"sk_live_A1b2C3d4E5f6G7h8I9\",\n    \"maps\": \"AIzaSyC4-TemporaryKey98d_a\",\n    \"internal_token\": \"v2.local.prodsvc.eyJhbGciOiJIUzI1NiJ9\"\n  },\n  \"debug_mode\": false,\n  \"log_level\": \"INFO\"\n}",
+    "description": "Config JSON con chiavi API e JWT dall'aspetto realistico."
+  },
+  {
+    "tag": "LEAK_DEV_SCRATCHPAD",
+    "category": "sensitive_text_monitor",
+    "filename": "dev_notes.txt",
+    "suggested_path": "/home/dev/projects/api/",
+    "content": "# Project API - Development Notes\n# Date: 2023-11-15\n\n## TODO\n- Implement OAuth2\n- Optimize DB queries\n- Review profile update handler\n\n## Temporary Access (remove when pipeline is stable)\nssh dev_staging@192.168.100.24\nPassword: St@g1ng_D3v_2024!\n\n# S3 backup account\nAccess Key ID: AKIA34FJ2L9D884PQ22\nSecret Access Key: aS3f2pN7yQ9eLm2Wb5Vh0cK8nD3rT1uJ4sPa9xZ6\n",
+    "description": "Note sviluppatore con credenziali AWS e SSH statiche."
+  },
+  {
+    "tag": "LEAK_OPENVPN_LEGACY",
+    "category": "sensitive_text_monitor",
+    "filename": "vpn_credentials.conf",
+    "suggested_path": "/etc/openvpn/client/",
+    "content": "# OpenVPN Client Configuration\n# This file contains sensitive VPN credentials. Handle with care.\n\n# VPN Server Address\nremote 203.0.113.45 1194\n\n# User Credentials\nauth-user-pass /etc/openvpn/client/auth.txt\n\n# auth.txt content references:\n# Username:\n# vpn_remote_user\n# Password:\n# Vpn$ecure!Access_23\n\n# Connection Type\nclient\ndev tun\nproto udp\n\n# Certificate Details\nca ca.crt\ncert client.crt\nkey client.key\n\n# Other settings\nresolv-retry infinite\nnobind\npersist-key\npersist-tun\ncipher AES-256-CBC\ncomp-lzo\nverb 3",
+    "description": "Configurazione VPN con IP pubblico finto e credenziali commentate."
+  },
+  {
+    "tag": "LURE_CONTEXT_PHISHING",
+    "category": "pdf_lure_context",
+    "filename": "Important_Security_Policy_Update_Action_Required.eml",
+    "suggested_path": "/home/user/Documents/Security_Alerts/",
+    "content": "Subject: IMPORTANT: Critical Security Policy Update - Immediate Action Required\nFrom: security@company.com\nTo: user@company.com\nDate: Fri, 26 Jul 2024 10:30:00 -0400\nMIME-Version: 1.0\nContent-Type: text/plain; charset=\"UTF-8\"\n\nDear Employee,\n\nThis is an urgent notification from the IT Security Department regarding a critical update to our company's cybersecurity policies. Due to recent global threats, we have implemented several new protocols to protect our sensitive data and infrastructure.\n\nIt is mandatory for all employees to review the updated policy document immediately. This document outlines new procedures, acceptable use policies, and mandatory training requirements.\n\nPlease find the full details in the attached PDF file: {{PDF_FILENAME}}\n\nYour prompt attention to this matter is crucial to maintaining a secure working environment for everyone. Failure to comply with the updated policies may result in disciplinary action.\n\nThank you for your cooperation.\n\nSincerely,\n\nIT Security Department\nCompany Name",
+    "found_placeholders": [
+      "{{PDF_FILENAME}}"
+    ],
+    "expected_placeholders": [
+      "{{PDF_FILENAME}}"
+    ]
+  },
+  {
+    "tag": "LURE_CONTEXT_PROJECT",
+    "category": "pdf_lure_context",
+    "filename": "project_guidelines_READ_ME.txt",
+    "suggested_path": "/home/user/Projects/Q3_Initiative/",
+    "content": "# Project Q3 Initiative - Guidelines and Overview\n\nWelcome to the Q3 Initiative project folder. This document provides a quick overview of the project structure and important resources.\n\n## Key Information\n-   **Project Lead:** Jane Doe\n-   **Deadline:** October 31, 2024\n-   **Status:** In Progress\n\n## Important Notes\nPlease ensure you read the comprehensive project brief before starting any tasks. All critical objectives, scope details, and technical specifications are outlined in the main project document.\n\nYou can find the official project brief here: {{PDF_FILENAME}}\n\nIt is imperative that everyone involved understands the core requirements detailed in this PDF to avoid miscommunication and rework.\n\n## Folder Structure\n-   `./docs/`: Supplementary documentation, meeting minutes.\n-   `./src/`: Source code and development files.\n-   `./assets/`: Design assets, mockups.\n-   `./reports/`: Progress reports and analytics.\n\nIf you have any questions after reviewing the PDF, please contact Jane Doe.",
+    "found_placeholders": [
+      "{{PDF_FILENAME}}"
+    ],
+    "expected_placeholders": [
+      "{{PDF_FILENAME}}"
+    ]
+  },
+  {
+    "tag": "LURE_CONTEXT_HR",
+    "category": "pdf_lure_context",
+    "filename": "HR_Policy_Update_Memo.txt",
+    "suggested_path": "/home/user/Documents/Company_Policies/",
+    "content": "MEMORANDUM\n\nTo: All Employees\nFrom: Human Resources Department\nDate: July 26, 2024\nSubject: Important Updates to Employee Benefits and Wellness Programs\n\nDear Team,\n\nThis memo is to inform you about significant enhancements and updates to our employee benefits and wellness programs, effective August 15, 2024. Our goal is to continually improve the support we offer to our valued employees.\n\nKey changes include:\n-   Expanded mental health resources\n-   New fitness incentives\n-   Adjustments to parental leave policies\n\nFor a complete and detailed breakdown of all changes, eligibility criteria, and how to enroll in new programs, please refer to the official document.\n\nYou can access the full details here: {{PDF_FILENAME}}\n\nWe strongly encourage everyone to review this document carefully to understand how these updates may affect you. HR will be holding informational sessions next week, but the PDF contains all the necessary information.\n\nShould you have any immediate questions, please reach out to the HR Benefits team.\n\nThank you,\n\nHuman Resources Department\nCompany Name",
+    "found_placeholders": [
+      "{{PDF_FILENAME}}"
+    ],
+    "expected_placeholders": [
+      "{{PDF_FILENAME}}"
+    ]
+  }
+]
