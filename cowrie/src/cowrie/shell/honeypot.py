@@ -95,7 +95,7 @@ class HoneyPotShell:
         self.protocol.sess_id = getattr(getattr(getattr(term, "transport", None), "session", None), "id", None)
          
         #counter init
-        self.call_counter=1 #setting it to 1 so that we try the inference at the second input line and the every CMD_BETWEEN_LLM_CALLS
+        self.call_counter=1 #setting it to 1 so that we try the inference at the second input line and the every CMD_BETWEEN_LLM_CALLS+1
         #template loading
         with open("/home/cowrie/cowrie/src/cowrie/shell/templates/template.json", "r", encoding="utf-8") as f:  # relative file path to honeypot.py, which is inside of src/cowrie/shell
             text = f.read().strip()
