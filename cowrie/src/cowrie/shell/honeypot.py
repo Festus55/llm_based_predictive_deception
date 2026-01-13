@@ -594,9 +594,11 @@ class HoneyPotShell:
         for index, cmd in reversed(list(enumerate(cmd_array))):
             #%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if cmd["command"].endswith(('.sh', '.bash')) or self.isbash(cmd["command"]):
-                log.msg(f"found runnable bash custom script {cmd['command']}, bash execution...")
-                cmd["rargs"]= cmd["command"] + cmd["rargs"]
+                
+                script = cmd["command"]
+                cmd["rargs"]= [script, *cmd["rargs"]]
                 cmd["command"]="bash"
+                log.msg(f"found runnable bash custom script {script}, bash execution {cmd['command']} {cmd['rargs']}...")
             #%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             cmdclass = self.protocol.getCommand(
                 cmd["command"], environ["PATH"].split(":")
