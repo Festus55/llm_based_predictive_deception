@@ -114,14 +114,19 @@ class Command_chmod(HoneyPotCommand):
                 else:
                     f = self.fs.getfile(path)
                     file_mode_no_perm = f[fs.A_MODE] & NO_PERM_BITS_MASK
-                    keep = f[fs.A_MODE] & ~0o777
-                    perm = f[fs.A_MODE] & 0o777
+                    keep = f[fs.A_MODE] & ~PERM_MASK
+                    perm = f[fs.A_MODE] & PERM_MASK
+
                     try:
                         newperm = int(mode, 8)
                     except ValueError:
-                        newperm = apply_symbolic(perm, mode)
+                        try:
+                            newperm = apply_symbolic(perm, mode)
+                        except ValueError:
+                            self.errorWrite(f"chmod: invalid mode: ‘{mode}’\n" + TRY_CHMOD_HELP_MSG)
+                            return
 
-                    f[fs.A_MODE] = keep | (newperm & 0o777)
+                    f[fs.A_MODE] = keep | (newperm & PERM_MASK)
 
 
     def parse_args(self):
