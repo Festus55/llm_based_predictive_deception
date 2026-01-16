@@ -26,7 +26,7 @@ else
 fi
 
 # start the cowrie log ingester in bg
-LOG_INGESTER="${SCRIPT_DIR}/save-log-cowrie.py"
+LOG_INGESTER="${SCRIPT_DIR}/mongoDB/save-log-cowrie.py"
 if [ -f "$LOG_INGESTER" ]; then
     echo "[*] Starting Cowrie Log Ingester..."
 
