@@ -16,8 +16,8 @@ LISTEN_PORT = 2222  # The port attackers connect to (EXTERNAL)
 
 # The two cowrie instances (INTERNAL)
 BACKENDS = [
-    ('127.0.0.1', 2222),
-    ('127.0.0.1', 2223)
+    ('127.0.0.1', 2223),
+    ('127.0.0.1', 2224)
 ]
 
 # Round-robin cycle
