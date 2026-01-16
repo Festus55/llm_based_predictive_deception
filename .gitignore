@@ -1,8 +1,6 @@
 LOGS/
 venv/
 
-.env
-
 datasets/sliding_windows_long_kaggle_sessions.json
 
 scripts/training/training_set.json
