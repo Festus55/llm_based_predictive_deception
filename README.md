@@ -270,33 +270,21 @@ The system can deploy various types of Canarytokens based on predicted attacker 
     sudo systemctl enable --now mongod
     ```
 
-#### 1.5 Webhook Listener
+#### 1.5 Webhook Listener AND Cowrie Log Ingestion
 
-11. Set up the webhook listener:
+11. Set up the webhook listener && cowrie log ingestion service:
+    > The cowrie log ingestion script polls the VM every 10 minutes and saves Cowrie logs to MongoDB.
     ```bash
     # Install dependencies
-    pip3 install flask pymongo gunicorn
+    pip3 install flask pymongo gunicorn paramiko
 
     # Start the listener (production)
-    ./start-listener.sh
+    ./start-canary-listener-ingester.sh
 
     # Or run directly for testing
-    python3 listener9000.py
+    nohup python3 mongoDB/save-log-cowrie.py &
+    python3 listener9000.py 
     ```
-
-#### 1.6 Cowrie Log Ingestion
-
-12. Set up the Cowrie log ingestion service:
-    ```bash
-    # Install dependencies
-    pip3 install paramiko pymongo
-
-    # Configure SSH key path in save-log-cowrie.py
-    # Run the ingestion service
-    python3 save-log-cowrie.py
-    ```
-
-    This script polls the VM every 10 minutes and saves Cowrie logs to MongoDB.
 
 #### 1.7 Viewing Data
 
@@ -540,7 +528,6 @@ The repository includes scripts for fine-tuning Gemma 3 on honeypot session data
 
 3. Generate training data using knowledge distillation: 
    ```bash
-   # Uses GPT-4 to generate trap predictions
    python scripts/batched\ knowledge\ distillation/sonar_batch_processor.py
    ```
 
