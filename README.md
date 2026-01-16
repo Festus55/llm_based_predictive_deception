@@ -113,12 +113,12 @@ The system can deploy various types of Canarytokens based on predicted attacker 
 
 | Trap Category | Template Examples | Detection Method |
 |---------------|-------------------|------------------|
-| **AWS Credentials** | `AWS_CLI_DEFAULT`, `AWS_ENV_WEBAPP`, `AWS_PY_S3_UPLOADER` | AWS API monitoring |
-| **Kubernetes** | `K8S_USER_DEFAULT`, `K8S_CI_PIPELINE`, `K8S_ROOT_ADMIN` | K8s API token monitoring |
-| **WireGuard VPN** | `VPN_WG_SERVER_IFACE`, `VPN_WG_MOBILE` | VPN client activation |
-| **HTTP Traps** | `TRAP_BASH_LOGROTATE`, `TRAP_PY_POSTGRES_DUMP` | Script execution callback |
-| **Leak Files** | `LEAK_PLAINTEXT_CREDS`, `LEAK_INFRA_INVENTORY` | File access monitoring |
-| **PDF Lures** | `LURE_CONTEXT_PHISHING`, `LURE_CONTEXT_PROJECT` | PDF reader phone-home |
+| **AWS Credentials** | `AWS_CLI_DEFAULT`, `AWS_ENV_WEBAPP`, `AWS_PY_S3_UPLOADER`, `AWS_PY_LAMBDA_LEAK`, `AWS_INI_SERVICE`| AWS API monitoring |
+| **Kubernetes** | `K8S_USER_DEFAULT`, `K8S_CI_PIPELINE`, `K8S_ROOT_ADMIN`, `K8S_BACKUP_OLD`, `K8S_SERVICE_ACCOUNT`  | K8s API token monitoring |
+| **WireGuard VPN** | `VPN_WG_SERVER_IFACE`, `VPN_WG_MOBILE`, `VPN_WG_SEGMENTED` | VPN client activation |
+| **HTTP Traps** | `TRAP_BASH_LOGROTATE`, `TRAP_PY_POSTGRES_DUMP`, `TRAP_BASH_SYSCHECK` | Script execution callback |
+| **Leak Files** | `LEAK_PLAINTEXT_CREDS`, `LEAK_INFRA_INVENTORY`, `LEAK_APP_SECRETS`, `LEAK_DEV_SCRATCHPAD`, `LEAK_OPENVPN_LEGACY` | File access monitoring |
+| **PDF Lures** | `LURE_CONTEXT_PHISHING`, `LURE_CONTEXT_PROJECT`, `LURE_CONTEXT_HR` | PDF reader phone-home |
 | **File Substitution** | `FILE_SUBSTITUTION_HTTP` | Download detection |
 
 ---
