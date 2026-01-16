@@ -20,7 +20,7 @@ BACKENDS = [
 
 # round-robin cycle
 backend_cycle = itertools.cycle(BACKENDS)
-cycle_lock = threading. Lock()
+cycle_lock = threading.Lock()
 
 
 def get_next_backend():
@@ -35,7 +35,7 @@ def handle_client(client_socket, client_addr):
     print(f"[*] Forwarding connection from {client_addr[0]}:{client_addr[1]} to {backend_host}:{backend_port}")
 
     try:
-        backend_socket = socket. socket(socket.AF_INET, socket.SOCK_STREAM)
+        backend_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         backend_socket.settimeout(10)  # Connection timeout
         backend_socket.connect((backend_host, backend_port))
         backend_socket.settimeout(None)  # Remove timeout after connection
@@ -45,9 +45,9 @@ def handle_client(client_socket, client_addr):
         return
 
     # Event to signal when forwarding should stop
-    stop_event = threading. Event()
+    stop_event = threading.Event()
 
-    client_to_backend = threading. Thread(
+    client_to_backend = threading.Thread(
         target=forward,
         args=(client_socket, backend_socket, stop_event, f"{client_addr[0]} -> backend")
     )
@@ -78,7 +78,7 @@ def forward(source, destination, stop_event, direction=""):
     finally:
         stop_event.set()  # Signal the other thread to stop
         try:
-            source. shutdown(socket.SHUT_RD)
+            source.shutdown(socket.SHUT_RD)
         except Exception:
             pass
         try:
@@ -89,10 +89,10 @@ def forward(source, destination, stop_event, direction=""):
 
 def main():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.setsockopt(socket. SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
     try:
-        server. bind((LISTEN_HOST, LISTEN_PORT))
+        server.bind((LISTEN_HOST, LISTEN_PORT))
     except Exception as e: 
         print(f"[!] Error binding to {LISTEN_HOST}:{LISTEN_PORT}: {e}")
         sys.exit(1)
@@ -107,7 +107,7 @@ def main():
             client_handler = threading.Thread(target=handle_client, args=(client_socket, addr))
             client_handler.daemon = True
             client_handler.start()
-        except KeyboardInterrupt: 
+        except KeyboardInterrupt:
             print("\n[*] Stopping...")
             break
         except Exception as e:
