@@ -26,7 +26,7 @@ python -m vllm.entrypoints.openai.api_server \
   --served-model-name base \
   --enable-lora \
   --max-lora-rank 16 \
-  --chat-template ~/templates/gemma3_chat_template.jinja \
+  --chat-template ./gemma3_chat_template.jinja \
   --chat-template-content-format string \
   --max-model-len 8192 \
   --max-num-seqs 4 \

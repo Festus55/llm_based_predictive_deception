@@ -9,7 +9,7 @@ if not hasattr(builtins, "VARIANT_KWARG_KEYS"):
     builtins.VARIANT_KWARG_KEYS = ["adapter_name"]
 
 model, tokenizer = FastModel.from_pretrained(
-    model_name = "unsloth/gemma-3-4b-pt-unsloth-bnb-4bit",  
+    model_name = "unsloth/gemma-3-4b-it-unsloth-bnb-4bit",  
     max_seq_length = 1024,
     load_in_4bit = True,
     load_in_8bit = False,
@@ -104,6 +104,6 @@ print(f"Peak reserved memory for training = {used_memory_for_lora} GB.")
 print(f"Peak reserved memory % of max memory = {used_percentage} %.")
 print(f"Peak reserved memory for training % of max memory = {lora_percentage} %.")
 
-model.save_pretrained("gemma-3-4b-pt")
-tokenizer.save_pretrained("gemma-3-4b-pt")
+model.save_pretrained("gemma-3-4b-it")
+tokenizer.save_pretrained("gemma-3-4b-it")
 

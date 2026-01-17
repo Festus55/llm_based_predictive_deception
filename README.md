@@ -492,62 +492,51 @@ The system uses vLLM to serve the fine-tuned Gemma 3 model.
    pip install vllm
    ```
 
-2. Start the LLM API server:
-   ```bash
-   # Using the provided script
-   ./scripts/cowrie_app/startup_API_server. sh
+2. Start the LLM API server with one of the inteded configurations
+   | Model Name | Adapter Position | IP ( default: `192.168.122.1` ) |
+   |--------|---------|---------|
+   | `gemma-3-12b-pt` | `./gemma-3-12b-pt` | `<API_SERVER_IP>`
+   | `gemma-3-4b-pt` | `./gemma-3-4b-pt` | `<API_SERVER_IP>`
+   | `gemma-3-4b-it` |` ./gemma-3-4b-it` | `<API_SERVER_IP>`
 
-   # Or manually
-   python -m vllm. entrypoints.openai.api_server \
-       --model google/gemma-3-12b-it \
-       --lora-modules honeypot=./adapters/gemma-3-12b \
-       --port 8000 \
-       --host 0.0.0.0
+   The provided script loads the model and the specified adapter, it loads the gemma 3 chat template form the same directory and allows the moddel to use up to 90% of the GPU memory.
+   
+   ```bash
+   ./scripts/cowrie_app/startup_API_server. sh
    ```
 
-   The LLM API will be available at `http://192.168.122.1:8000/v1/chat/completions`.
+   The LLM API will be available at `http://<API_SERVER_IP>:8000/v1/chat/completions`.
 
 ---
 
 ## Fine-Tuning the Model
 
-The repository includes scripts for fine-tuning Gemma 3 on honeypot session data. 
+Under the `/scripts` section there are the 3 main mutations our dataset recieved: data preparation, data enrichment, data trainig formatting
 
-### Dataset Preparation
+### Dataset Preparation TODO
 
-1. Parse raw Cowrie logs: 
-   ```bash
-   python scripts/parse.py
-   python scripts/process_sessions.py
-   ```
+### Data Enrichment
+The prepared dataset is forther batch processed through gemma 2.5 flash inside of a GCS environment, using Google Colab Enterprise.
+To prepare the batch job, with the intended task and system prompt (stored inside of `/scripts/batch_processing/data_distillation_prompts`) and load the augmented input inside of a GCS bucket,
+run `/scripts/batch_processing/prepare_batch_gcs_output.py`.
+To launch the batch job, run `/scripts/batch_processing/start_batch_work.py`
 
-2. Create sliding window sequences:
-   ```bash
-   python scripts/mk_sliding_windows.py
-   ```
-
-3. Generate training data using knowledge distillation: 
-   ```bash
-   python scripts/batched\ knowledge\ distillation/sonar_batch_processor.py
-   ```
-
-4. Format for training:
-   ```bash
-   python scripts/training/parse_toJSONL.py
-   python scripts/training/dedup.py
-   python scripts/training/split.py
-   ```
-
-### Training
-
-Use the provided Jupyter notebook or Python script: 
-
+### Training 
+Before the training, download the output from the GCS bucket, and parse it to a training format accustomed to the Gemma training data format. 
+```bash
+# First JSONL response format to single JSON response field
+python3 scripts/training_processing/parse_response_toJSON.py
+```
+Then either run each of the other **python** scripts inside of `scripts/training_processing/` following the order: split, parse_toJSONL, prompt_completition, sanitize_B64, sanitize_hex, collapse_hx and parse_fromPC_toText, or the single **bash** script that groups them all and does the cleanup:
+```bash
+   /scripts/training_processing/run_data_processing.sh
+```
+Then, with the prepared dataset, the training can be launched. It's better to run these scripts on a `tmux` to keep track of this long processing. It's always best to run a small test to evaluate the effectiveness of the fine tuning process without wasting time and resources (`adapters/gemma-3-12-2k` is a test on a 2000 lines training subset and 500 lines evaluation susbset for example).
 ```bash
 # Using Unsloth for efficient fine-tuning
-python scripts/training/unsloth_train_12B.py
-
-# Or use the notebook
-jupyter notebook scripts/training/Gemma3_(12B).ipynb
+python3 scripts/training/unsloth_train_12B.py
+python3 scripts/training/unsloth_train_4B_pt.py
+python3 scripts/training/unsloth_train_4B_it.py
 ```
 
 The trained LoRA adapters will be saved to the `adapters/` directory.

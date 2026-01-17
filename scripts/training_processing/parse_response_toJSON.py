@@ -3,7 +3,7 @@ import ast
 
 input_filename = '../../../dataset/enriched_data/previsions.jsonl'
 output_filename = '../../../dataset/enriched_data/training_set.json'
-output_error_filename = '../../../dataset/enriched_data/distilled_errors_bis.json'
+output_error_filename = '../../../dataset/enriched_data/distilled_errors.json'
 
 valid_records = 0
 errors = 0
