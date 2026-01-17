@@ -445,6 +445,7 @@ For AWS credential Canarytokens:
    cp scripts/cowrie_app/fs.py src/cowrie/shell/fs.py
    cp scripts/cowrie_app/curl.py src/cowrie/commands/curl.py
    cp scripts/cowrie_app/wget.py src/cowrie/commands/wget.py
+   cp scripts/cowrie_app/chmod.py src/cowrie/commands/chmod.py
    
    # Copy templates
    mkdir -p src/cowrie/shell/templates
@@ -500,7 +501,7 @@ The system uses vLLM to serve the fine-tuned Gemma 3 model.
    | `gemma-3-4b-it` |` ./gemma-3-4b-it` | `<API_SERVER_IP>`
 
    The provided script loads the model and the specified adapter, it loads the gemma 3 chat template form the same directory and allows the moddel to use up to 90% of the GPU memory.
-   
+
    ```bash
    ./scripts/cowrie_app/startup_API_server. sh
    ```
