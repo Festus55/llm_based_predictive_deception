@@ -41,15 +41,15 @@ tokenizer = get_chat_template(
 data = load_dataset(
     "json",
     data_files={
-        "train": "train_final.jsonl",
-        "validation": "val_final.jsonl",
+        "train": "train.jsonl",
+        "validation": "val.jsonl",
     },
 )
 
 tr_dataset = data["train"]
 ev_dataset  = data["validation"]
 train_dataset = tr_dataset
-eval_dataset  = ev_dataset # optionally also shrink eval to make eval fast
+eval_dataset  = ev_dataset # possible shrinking of both eval and training datasets to run tests
 
 trainer = SFTTrainer(
     model = model,

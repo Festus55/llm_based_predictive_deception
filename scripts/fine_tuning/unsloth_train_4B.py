@@ -46,7 +46,7 @@ data = load_dataset(
 
 #tr_dataset = data["train"]
 #ev_dataset  = data["validation"]
-#train_dataset = tr_dataset.select(range(2000))
+#train_dataset = tr_dataset.select(range(2000))# possible shrinking of both eval and training datasets to run tests
 #eval_dataset  = ev_dataset.select(range(500))
 train_dataset = data["train"]
 eval_dataset  = data["validation"]
