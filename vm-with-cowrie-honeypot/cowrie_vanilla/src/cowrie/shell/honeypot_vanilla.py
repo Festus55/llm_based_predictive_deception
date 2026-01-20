@@ -4,6 +4,8 @@
 
 from __future__ import annotations
 
+import signal
+
 import copy
 import os
 import re
@@ -19,6 +21,7 @@ from cowrie.core.config import CowrieConfig
 from cowrie.shell import fs
 from cowrie.shell.parser import CommandParser
 from cowrie.shell.pipe import PipeProtocol
+from contextlib import contextmanager
 
 # Pre-compiled regexes for environment variable expansion
 _ENV_BRACE_RE = re.compile(r"^\${([_a-zA-Z0-9]+)}$")
@@ -686,3 +689,14 @@ class HoneyPotShell:
             return any(pattern in shebang for pattern in bash_patterns)
         else:
             return False
+        
+@contextmanager
+def timeout(seconds):
+    def timeout_handler(signum, frame):
+        raise TimeoutError("FS operation timeout")
+    signal.signal(signal.SIGALRM, timeout_handler)
+    signal.setitimer(signal.ITIMER_REAL, seconds)
+    try:
+        yield
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, 0)
