@@ -1,28 +1,12 @@
 LOGS/
 venv/
 
-datasets/sliding_windows_long_kaggle_sessions.json
+#datasets/sliding_windows_long_kaggle_sessions.json
 
-scripts/training/training_set.json
+#adapters/gemma-3-12b-2k/adapter_model.safetensors
 
-scripts/training/cleaned_stats.json
+#adapters/gemma-3-12b/adapter_model.safetensors
 
-scripts/training/cleaned.json
+#adapters/gemma-3-4b/adapter_model.safetensors
 
-scripts/training/clean_val.json
-
-scripts/training/clean_train.json
-
-datasets/test_train_set/training_set.json
-
-datasets/batch/training_set.json
-
-datasets/batch/previsions.jsonl
-
-adapters/gemma-3-12b-2k/adapter_model.safetensors
-
-adapters/gemma-3-12b/adapter_model.safetensors
-
-adapters/gemma-3-4b/adapter_model.safetensors
-
-adapters/gemma-3-4b-pt/adapter_model.safetensors
+#adapters/gemma-3-4b-pt/adapter_model.safetensors
