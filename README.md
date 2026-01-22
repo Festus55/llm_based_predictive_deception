@@ -57,6 +57,11 @@ flowchart LR
       TOKEN_STD["Canary File Standard"]:::canary
       COWRIE_JSON["cowrie.json log file"]:::logfile
     end
+    LLM_ANCHOR[" "]:::spacer
+    classDef spacer fill:transparent,stroke:transparent,color:transparent;
+
+    CONN_SWITCH ~~~ LLM_ANCHOR
+    LLM_ANCHOR ~~~ LLM
   end
 
   ADMIN -->|SSH 4321| FSSH
