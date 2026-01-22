@@ -68,9 +68,9 @@ flowchart LR
   P6453 -->|FORWARD| REAL_SSH
 
   COWRIE_LLM -->|1. Attacker Commands| LLM
-  LLM -->|2. Generate Token| FRONT
-  FRONT -->|3. Return Token URL| LLM
-  LLM -->|4. Send Path URL| COWRIE_LLM
+  LLM -->|2. Previsions| COWRIE_LLM
+  COWRIE_LLM -->|3. Generate Token| FRONT
+  FRONT -->|4. Return Token URL| COWRIE_LLM
   COWRIE_LLM -->|5. Create File| TOKEN_LLM
 
   COWRIE_STD -->|Generate Token| FRONT
