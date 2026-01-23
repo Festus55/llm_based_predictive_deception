@@ -415,6 +415,32 @@ log_raw = false
 # (default: false)
 #debug = false
 
+# Maximum command length to send to LLM (prevents token exhaustion)
+# Commands longer than this will be truncated
+# (default: 1000)
+#max_command_length = 1000
+
+# Log sanitization actions (ANSI removal, injection detection, etc.)
+# (default: true)
+#log_sanitization = true
+
+
+# ============================================================================
+# Resource Monitor Options
+# ============================================================================
+[resource_monitor]
+
+# Enable periodic resource monitoring
+# Logs memory usage, thread count, open file descriptors at regular intervals
+# Useful for detecting leaks during long-running deployments
+# (default: false)
+#enabled = false
+
+# Monitoring interval in seconds
+# How often to log resource statistics
+# (default: 300 - 5 minutes)
+#interval = 300
+
 
 # ============================================================================
 # Shell Options

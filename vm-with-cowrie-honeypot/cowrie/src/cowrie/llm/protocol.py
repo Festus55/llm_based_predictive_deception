@@ -16,6 +16,7 @@ from twisted.python import log
 
 from cowrie.core.config import CowrieConfig
 from cowrie.llm.llm import LLMClient
+from cowrie.llm.sanitizer import sanitize_command
 
 
 def strip_markdown(text: str) -> str:
@@ -136,8 +137,11 @@ class HoneyPotBaseProtocol(insults.TerminalProtocol, TimeoutMixin):
             self.llm_client = LLMClient()
             self.command_history = []
 
-        # Add the command to our history
-        self.command_history.append(f"User: {command}")
+        # Sanitize the command before sending to LLM
+        sanitized_command, was_modified = sanitize_command(command)
+        
+        # Add the sanitized command to our history
+        self.command_history.append(f"User: {sanitized_command}")
 
         # Construct an appropriate prompt for the LLM
         # We'll include system context to help the LLM respond appropriately
@@ -245,6 +249,9 @@ class HoneyPotExecProtocol(HoneyPotBaseProtocol):
         self.llm_client = LLMClient()
         self.command_history = []
 
+        # Sanitize the exec command before sending to LLM
+        sanitized_execcmd, was_modified = sanitize_command(self.execcmd)
+
         # Construct the prompt
         system_context = (
             "You are simulating a Linux server that has been accessed via SSH with a command to execute. "
@@ -252,7 +259,7 @@ class HoneyPotExecProtocol(HoneyPotBaseProtocol):
             "Keep responses realistic, including appropriate error messages for invalid commands. "
             f"The hostname is '{self.hostname}' and username is '{self.user.username}'. "
             f"The current working directory is '{self.cwd}'. "
-            "The command to execute is: " + self.execcmd
+            "The command to execute is: " + sanitized_execcmd
         )
 
         prompt = [system_context]
