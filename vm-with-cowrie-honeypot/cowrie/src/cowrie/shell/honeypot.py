@@ -149,6 +149,12 @@ class HoneyPotShell:
         d_delay = defer.Deferred()
         reactor.callLater(delay, d_delay.callback, None)
         yield d_delay
+
+        # Check if session survived the delay fixing an error that occurred when attacker disconnected during the delay
+        if not self._session_alive():
+            log.msg("Session closed during AI delay, aborting command execution")
+            return
+
         # Resume Standard Execution
         self._execute_standard_command(line)
    
@@ -1381,6 +1387,9 @@ class HoneyPotShell:
         return d
     
     def isbash(self, cmd):
+        if not getattr(self.protocol, "fs", None):
+            return False
+
         try:
             with timeout(0.1):
                 abs_path = self.protocol.fs.resolve_path(cmd, self.protocol.cwd)
