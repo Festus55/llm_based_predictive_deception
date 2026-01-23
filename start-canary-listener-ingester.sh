@@ -26,16 +26,17 @@ else
 fi
 
 # start the cowrie log ingester in bg
-LOG_INGESTER="${SCRIPT_DIR}/mongoDB/save-log-cowrie.py"
+LOG_INGESTER="${SCRIPT_DIR}/mongoDB/save-cowrie-logs.py"
 if [ -f "$LOG_INGESTER" ]; then
     echo "[*] Starting Cowrie Log Ingester..."
 
-    pkill -f "python.*save-log-cowrie.py" 2>/dev/null || true
+    pkill -f "python.*save-log-cowrie.py" 2>/dev/null || true # the old one
+    pkill -f "python.*save-cowrie-logs.py" 2>/dev/null || true
     nohup python3 "$LOG_INGESTER" &
     INGESTER_PID=$!
     echo "[+] Cowrie Log Ingester started (PID: $INGESTER_PID)"
 else
-    echo "[!] Warning: save-log-cowrie.py not found at $LOG_INGESTER"
+    echo "[!] Warning: save-cowrie-logs.py not found at $LOG_INGESTER"
 fi
 
 # start the webhook listener in fg
