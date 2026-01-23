@@ -54,7 +54,10 @@ class HoneyPotSSHTransport(transport.SSHServerTransport, TimeoutMixin):
         @return Pretty representation of this object as a string
         @rtype: L{str}
         """
-        return f"Cowrie SSH Transport to {self.transport.getPeer().host}"
+        try:
+            return f"Cowrie SSH Transport to {self.getClientIP()}"
+        except Exception:
+            return f"Cowrie SSH Transport to {self.transport.getPeer().host}"
 
     def getClientIP(self) -> str:
         """

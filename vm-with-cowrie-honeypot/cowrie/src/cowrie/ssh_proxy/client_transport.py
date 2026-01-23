@@ -52,7 +52,14 @@ class BackendSSHTransport(transport.SSHClientTransport, TimeoutMixin):
         self.frontendTriedPassword = None
 
     def connectionMade(self):
-        log.msg(f"Connected to SSH backend at {self.transport.getPeer().host}")
+        try:
+            backend_host = self.transport.getPeer().host
+        except Exception:
+            try:
+                backend_host = str(self.transport.getPeer())
+            except Exception:
+                backend_host = "unknown"
+        log.msg(f"Connected to SSH backend at {backend_host}")
         self.factory.server.client = self
         self.factory.server.sshParse.set_client(self)
         transport.SSHClientTransport.connectionMade(self)

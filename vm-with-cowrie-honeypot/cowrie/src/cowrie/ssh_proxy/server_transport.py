@@ -96,8 +96,33 @@ class FrontendSSHTransport(transport.SSHServerTransport, TimeoutMixin):
         self.transportId = uuid.uuid4().hex[:12]
         self.sessionno = f"S{self.transport.sessionno}"
 
-        self.peer_ip = self.transport.getPeer().host
-        self.peer_port = self.transport.getPeer().port + 1
+        # Walks through nested session/connection/transport objects to best-effort determine 
+        # the client IP and port, with fallbacks for different transport implementations
+        def _extract_client_ip_port(tr):
+            current = tr
+            for _ in range(10):
+                if hasattr(current, "getClientIP"):
+                    try:
+                        return current.getClientIP(), current.getClientPort()
+                    except Exception:
+                        pass
+                if hasattr(current, "session"):
+                    session = current.session
+                    if hasattr(session, "conn") and hasattr(session.conn, "transport"):
+                        current = session.conn.transport
+                        continue
+                if hasattr(current, "transport"):
+                    current = current.transport
+                    continue
+                break
+            if hasattr(tr, "getPeer"):
+                peer = tr.getPeer()
+                return getattr(peer, "host", str(peer)), getattr(peer, "port", None)
+            return ("unknown", None)
+
+        self.peer_ip, self.peer_port = _extract_client_ip_port(self.transport)
+        if self.peer_port is not None:
+            self.peer_port = self.peer_port + 1
         self.local_ip = self.transport.getHost().host
         self.local_port = self.transport.getHost().port
 
