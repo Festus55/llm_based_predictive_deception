@@ -135,13 +135,15 @@ class ResourceMonitor:
             
             # Connection count
             try:
-                connections = len(self.process.connections())
+                # Use net_connections() instead of deprecated connections()
+                connections = len(self.process.net_connections())
             except (psutil.AccessDenied, psutil.NoSuchProcess):
                 connections = -1
             
             # CPU usage (percent)
+            # Use interval=None for non-blocking call
             try:
-                cpu_percent = self.process.cpu_percent(interval=0.1)
+                cpu_percent = self.process.cpu_percent(interval=None)
             except (psutil.AccessDenied, psutil.NoSuchProcess):
                 cpu_percent = -1
             
