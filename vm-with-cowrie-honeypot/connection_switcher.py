@@ -39,6 +39,13 @@ def handle_client(client_socket, client_addr):
         backend_socket.settimeout(10)  # Connection timeout
         backend_socket.connect((backend_host, backend_port))
         backend_socket.settimeout(None)  # Remove timeout after connection
+        
+        # Send PROXY protocol v1 header with the real client IP
+        # Format: "PROXY TCP4 <src_ip> <dst_ip> <src_port> <dst_port>\r\n"
+        local_addr = client_socket.getsockname()
+        proxy_header = f"PROXY TCP4 {client_addr[0]} {local_addr[0]} {client_addr[1]} {local_addr[1]}\r\n"
+        backend_socket.sendall(proxy_header.encode('ascii'))
+        
     except Exception as e:
         print(f"[!] Failed to connect to backend {backend_host}:{backend_port}: {e}")
         client_socket.close()

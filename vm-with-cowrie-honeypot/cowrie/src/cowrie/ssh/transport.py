@@ -29,9 +29,13 @@ from cowrie.core.config import CowrieConfig
 class HoneyPotSSHTransport(transport.SSHServerTransport, TimeoutMixin):
     startTime: float = 0.0
     gotVersion: bool = False
+    gotProxyHeader: bool = False  # Track if PROXY protocol header was received
     buf: bytes
     transportId: str
+    realClientIP: str | None = None  # Store the real client IP from PROXY protocol
+    realClientPort: int | None = None  # Store the real client port from PROXY protocol
     ipv4rex = re.compile(r"^::ffff:(\d+\.\d+\.\d+\.\d+)$")
+    proxyRex = re.compile(r"^PROXY\s+TCP[46]\s+(\S+)\s+(\S+)\s+(\d+)\s+(\d+)\r?\n")
     auth_timeout: int = CowrieConfig.getint(
         "honeypot", "authentication_timeout", fallback=120
     )
@@ -52,33 +56,40 @@ class HoneyPotSSHTransport(transport.SSHServerTransport, TimeoutMixin):
         """
         return f"Cowrie SSH Transport to {self.transport.getPeer().host}"
 
-    def connectionMade(self) -> None:
+    def getClientIP(self) -> str:
         """
-        Called when the connection is made from the other side.
-        We send our version, but wait with sending KEXINIT
+        Get the real client IP, either from PROXY protocol or from the transport.
         """
-        self.buf = b""
-
-        self.transportId = uuid.uuid4().hex[:12]
+        if self.realClientIP is not None:
+            return self.realClientIP
         src_ip: str = self.transport.getPeer().host
-
         ipv4_search = self.ipv4rex.search(src_ip)
         if ipv4_search is not None:
             src_ip = ipv4_search.group(1)
+        return src_ip
 
-        log.msg(
-            eventid="cowrie.session.connect",
-            format="New connection: %(src_ip)s:%(src_port)s (%(dst_ip)s:%(dst_port)s) [session: %(session)s]",
-            src_ip=src_ip,
-            src_port=self.transport.getPeer().port,
-            dst_ip=self.transport.getHost().host,
-            dst_port=self.transport.getHost().port,
-            session=self.transportId,
-            sessionno=f"S{self.transport.sessionno}",
-            protocol="ssh",
-        )
+    def getClientPort(self) -> int:
+        """
+        Get the real client port, either from PROXY protocol or from the transport.
+        """
+        if self.realClientPort is not None:
+            return self.realClientPort
+        return self.transport.getPeer().port
 
-        self.transport.write(self.ourVersionString + b"\r\n")
+    def connectionMade(self) -> None:
+        """
+        Called when the connection is made from the other side.
+        We send our version, but wait with sending KEXINIT.
+        We also wait for potential PROXY protocol header before logging.
+        """
+        self.buf = b""
+        self.gotProxyHeader = False
+        self.realClientIP = None
+        self.realClientPort = None
+
+        self.transportId = uuid.uuid4().hex[:12]
+        
+        # Don't send version string yet - wait to check for PROXY protocol header
         self.currentEncryptions = transport.SSHCiphers(
             b"none", b"none", b"none", b"none"
         )
@@ -86,6 +97,28 @@ class HoneyPotSSHTransport(transport.SSHServerTransport, TimeoutMixin):
 
         self.startTime: float = time.time()
         self.setTimeout(self.auth_timeout)
+
+    def _logConnection(self) -> None:
+        """
+        Log the connection with the real client IP (after PROXY protocol parsing).
+        """
+        src_ip = self.getClientIP()
+        src_port = self.getClientPort()
+
+        log.msg(
+            eventid="cowrie.session.connect",
+            format="New connection: %(src_ip)s:%(src_port)s (%(dst_ip)s:%(dst_port)s) [session: %(session)s]",
+            src_ip=src_ip,
+            src_port=src_port,
+            dst_ip=self.transport.getHost().host,
+            dst_port=self.transport.getHost().port,
+            session=self.transportId,
+            sessionno=f"S{self.transport.sessionno}",
+            protocol="ssh",
+        )
+
+        # Now send our version string
+        self.transport.write(self.ourVersionString + b"\r\n")
 
     def sendKexInit(self) -> None:
         """
@@ -104,13 +137,33 @@ class HoneyPotSSHTransport(transport.SSHServerTransport, TimeoutMixin):
 
     def dataReceived(self, data: bytes) -> None:
         """
-        First, check for the version string (SSH-2.0-*).  After that has been
-        received, this method adds data to the buffer, and pulls out any
-        packets.
+        First, check for PROXY protocol header, then check for the version
+        string (SSH-2.0-*). After that has been received, this method adds
+        data to the buffer, and pulls out any packets.
 
         @type data: C{str}
         """
         self.buf = self.buf + data
+        
+        # Check for PROXY protocol header (only on first data received)
+        if not self.gotProxyHeader:
+            self.gotProxyHeader = True
+            buf_str = self.buf.decode('ascii', errors='ignore')
+            
+            # Check if this looks like a PROXY protocol header
+            if buf_str.startswith('PROXY '):
+                proxy_match = self.proxyRex.match(buf_str)
+                if proxy_match:
+                    self.realClientIP = proxy_match.group(1)
+                    self.realClientPort = int(proxy_match.group(3))
+                    # Remove the PROXY header from the buffer
+                    header_end = buf_str.find('\n') + 1
+                    self.buf = self.buf[header_end:]
+                    log.msg(f"PROXY protocol: real client IP {self.realClientIP}:{self.realClientPort}")
+            
+            # Now log the connection with the real IP and send version string
+            self._logConnection()
+        
         if not self.gotVersion:
             if b"\n" not in self.buf:
                 return

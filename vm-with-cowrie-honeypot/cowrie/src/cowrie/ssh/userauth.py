@@ -106,7 +106,7 @@ class HoneyPotSSHUserAuthServer(userauth.SSHUserAuthServer):
         Allow every login
         """
         c = credentials.Username(self.user)
-        srcIp: str = self.transport.transport.getPeer().host  # type: ignore
+        srcIp: str = self.transport.getClientIP()  # type: ignore
         return self.portal.login(c, srcIp, IConchUser)
 
     def auth_password(self, packet: bytes) -> Any:
@@ -116,7 +116,7 @@ class HoneyPotSSHUserAuthServer(userauth.SSHUserAuthServer):
         password = getNS(packet[1:])[0]
         if password == b"\x00":
             return None  # sshamble
-        srcIp = self.transport.transport.getPeer().host  # type: ignore
+        srcIp = self.transport.getClientIP()  # type: ignore
         c = credentials.UsernamePasswordIP(self.user, password, srcIp)
         return self.portal.login(c, srcIp, IConchUser).addErrback(self._ebPassword)
 
@@ -135,7 +135,7 @@ class HoneyPotSSHUserAuthServer(userauth.SSHUserAuthServer):
                 "only one keyboard interactive attempt at a time",
             )
             return defer.fail(error.IgnoreAuthentication())
-        src_ip = self.transport.transport.getPeer().host  # type: ignore
+        src_ip = self.transport.getClientIP()  # type: ignore
         c = credentials.PluggableAuthenticationModulesIP(
             self.user, self._pamConv, src_ip
         )

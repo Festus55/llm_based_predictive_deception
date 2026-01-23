@@ -70,8 +70,13 @@ class HoneyPotBaseProtocol(insults.TerminalProtocol, TimeoutMixin):
 
         self.factory = pt.factory
         self.sessionno = pt.transport.sessionno
-        self.realClientIP = pt.transport.getPeer().host
-        self.realClientPort = pt.transport.getPeer().port
+        # Use getClientIP/getClientPort if available (for PROXY protocol support)
+        if hasattr(pt, 'getClientIP'):
+            self.realClientIP = pt.getClientIP()
+            self.realClientPort = pt.getClientPort()
+        else:
+            self.realClientIP = pt.transport.getPeer().host
+            self.realClientPort = pt.transport.getPeer().port
         self.logintime = time.time()
 
         timeout = CowrieConfig.getint("honeypot", "interactive_timeout", fallback=180)
