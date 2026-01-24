@@ -7,7 +7,6 @@ OUTPUT_FILE = "processed_sessions.json"
 def process_cowrie_logs(
     input_path: str = INPUT_FILE,
     output_path: str = OUTPUT_FILE,
-    eos_token: str = "<EOS>",
 ) -> None:
     """
     Read (history, next_cmd, session_id, session_meta) examples from a JSONL file,
@@ -71,11 +70,8 @@ def process_cowrie_logs(
             for i, (_sess_id, content) in enumerate(items):
                 commands_list: List[str] = content["commands"]
 
-                # new list
-                commands_with_eos = commands_list + [eos_token]
-
                 output_object = {
-                    "commands": commands_with_eos
+                    "commands": commands_list
                     # You can also include meta if you decide it's useful later:
                     # "meta": content["meta"]
                 }

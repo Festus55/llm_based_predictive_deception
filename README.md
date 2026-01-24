@@ -820,7 +820,11 @@ The system uses vLLM to serve the fine-tuned Gemma 3 model.  This is only used b
 
 Under the `/scripts` section there are the 3 main mutations our dataset received:  data preparation, data enrichment, data training formatting
 
-### Dataset Preparation TODO
+### Dataset Preparation 
+To prepare the dataset it will be necessary take the following path of execution:
+1. `parse_dataset.py`: stream raw Cowrie JSON logs, sort events by time, and extract a simple "history + next command" relationship.
+2. `process_sessions.py`: Reads the output of the parser and reconstructs the longest unique sequence for every session ID. 
+3. `mk_sliding_windows.py`:Takes reconstructed sessions and creates a "Sliding Window" dataset. Instead of predicting just 1 command, it attempts to predict the next 6 commands (defined by WINDOW_SIZE).
 
 ### Data Enrichment
 The prepared dataset is further batch processed through gemma 2. 5 flash inside of a GCS environment, using Google Colab Enterprise. 
