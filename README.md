@@ -132,8 +132,194 @@ This architecture allows for:
 ```
 honeypot_predictive_deception/
 ├── README.md
-├── listener9000.py                    # Webhook listener for Canarytoken alerts
-...  TODO when repo ok
+├── adapters
+│   ├── README.md
+│   ├── gemma-3-12b/
+│   │   └── ...
+│   ├── gemma-3-12b-2k/
+│   │   └── ...
+│   ├── gemma-3-4b/
+│   │   └── ...
+│   ├── gemma-3-4b-pt/
+│   │   └── ...
+│   ├── gemma3_chat_template.jinja
+│   └── startup_API_server.sh
+├── canary
+│   ├── README.md
+│   ├── fetch-canary.py
+│   └── list-mails.py
+├── canarytokens-docker
+│   ├── LICENSE
+│   ├── README.md
+│   ├── canarytokens
+│   │   └── Dockerfile
+│   ├── certbot-nginx
+│   │   ├── Dockerfile
+│   │   ├── conf.d
+│   │   │   └── blocked_tokens.conf
+│   │   ├── nginx.conf
+│   │   └── start.sh
+│   ├── certbot.env.dist
+│   ├── common-services.yml
+│   ├── data
+│   │   └── README
+│   ├── docker-compose-aws-logging-letsencrypt.yml
+│   ├── docker-compose-aws-logging.yml
+│   ├── docker-compose-letsencrypt.yml
+│   ├── docker-compose.yml
+│   ├── frontend.env
+│   ├── frontend.env.dist
+│   ├── nginx
+│   │   ├── Dockerfile
+│   │   ├── conf.d
+│   │   │   └── blocked_tokens.conf
+│   │   └── nginx.conf
+│   ├── switchboard.env
+│   └── switchboard.env.dist
+├── dataset
+│   ├── README.md
+│   ├── enriched_data
+│   │   ├── README.md
+│   │   └── training_set.json
+│   ├── pre_enrichment_data
+│   │   ├── test.json
+│   │   └── train.json
+│   └── training_data
+│       ├── README.md
+│       ├── train.json
+│       ├── train.jsonl
+│       ├── val.json
+│       └── val.jsonl
+├── listener
+│   ├── README.md
+│   ├── listener9000.py
+│   └── start-canary-listener-ingester.sh
+├── mongoDB
+│   ├── README.md
+│   ├── save-cowrie-logs.py
+│   └── view-alerts.py
+├── scripts
+│   ├── README.md
+│   ├── batch_processing
+│   │   ├── README.md
+│   │   ├── data_distillation_prompts
+│   │   │   ├── README.md
+│   │   │   ├── trap_intent_prompt.md
+│   │   │   └── usertask.txt
+│   │   ├── prepare_batch_gcs_output.py
+│   │   └── start_batch_work.py
+│   ├── fine_tuning
+│   │   ├── README.md
+│   │   ├── unsloth_train_12B.py
+│   │   ├── unsloth_train_4B.py
+│   │   └── unsloth_train_4B_it.py
+│   └── training_processing
+│       ├── README.md
+│       ├── collapse_hx.py
+│       ├── parse_fromPC_toText.py
+│       ├── parse_response_toJSON.py
+│       ├── parse_toJSONL.py
+│       ├── prompt_completition_format.py
+│       ├── run_data_processing.sh
+│       ├── sanitizer_B64.py
+│       ├── sanitizer_hex.py
+│       └── split.py
+├── tex
+│   ├── README.md
+│   └── honeypot_predective_deception
+│       ├── imgs
+│       │   ├── Diagramma_logico_architettura.drawio.png
+│       │   └── diagramma dati.drawio.png
+│       ├── main.tex
+│       └── refs.bib
+└── vm-with-cowrie-honeypot
+    ├── README.md
+    ├── connection_switcher.py
+    ├── cowrie
+    │   ├── CHANGELOG.rst
+    │   ├── CONTRIBUTING.rst
+    │   ├── INSTALL.rst
+    │   ├── LICENSE.rst
+    │   ├── MANIFEST.in
+    │   ├── Makefile
+    │   ├── README.rst
+    │   ├── bin/
+    │   │   └── ...
+    │   ├── docker/
+    │   │   └── ...
+    │   ├── docs/
+    │   │   └── ...
+    │   ├── etc/
+    │   │   ├── ...    
+    │   │   ├── cowrie.cfg
+    │   │   └── ...
+    │   ├── honeyfs/
+    │   │   └── ...
+    │   ├── pyproject.toml
+    │   ├── requirements-output.txt
+    │   ├── requirements.txt
+    │   ├── setup.py
+    │   ├── src
+    │   │   ├── backend_pool/
+    │   │   │   └── ...
+    │   │   ├── cowrie
+    │   │   │   ├── __init__.py
+    │   │   │   ├── commands
+    │   │   │   │   ├── ...
+    │   │   │   │   ├── chmod.py          # Modified
+    │   │   │   │   ├── curl.py           # Modified
+    │   │   │   │   └── wget.py           # Modified
+    │   │   │   ├── core/
+    │   │   │   │   └── ...
+    │   │   │   ├── data/
+    │   │   │   │   └── ...
+    │   │   │   ├── insults/
+    │   │   │   │   └── ...
+    │   │   │   ├── llm/
+    │   │   │   │   └── ...
+    │   │   │   ├── output/
+    │   │   │   │   └── ...
+    │   │   │   ├── pool_interface/
+    │   │   │   │   └── ...
+    │   │   │   ├── python/
+    │   │   │   │   └── ...
+    │   │   │   ├── scripts/
+    │   │   │   │   └── ...
+    │   │   │   ├── shell
+    │   │   │   │   ├── ...
+    │   │   │   │   ├── fs.py                # Modified
+    │   │   │   │   ├── honeypot.py          # Modified
+    │   │   │   │   └── templates            # Added
+    │   │   │   │       └── template.json
+    │   │   │   ├── ssh/
+    │   │   │   │   └── ...
+    │   │   │   ├── ssh_proxy/
+    │   │   │   │   └── ...
+    │   │   │   ├── telnet/
+    │   │   │   │   └── ...
+    │   │   │   ├── telnet_proxy/
+    │   │   │   │   └── ...
+    │   │   │   ├── test/
+    │   │   │   │   └── ...
+    │   │   │   └── vendor/
+    │   │   │   │   └── ...
+    │   │   └── twisted/
+    │   │       └── ...
+    │   └── var
+    │       ├── lib
+    │       │   └── cowrie
+    │       └── run
+    └── cowrie_vanilla
+        ├── etc
+        │   └── cowrie.cfg
+        └── src
+            └── cowrie
+                ├── commands
+                │   ├── chmod.py
+                │   ├── curl.py
+                │   └── wget.py
+                └── shell
+                    └── honeypot_vanilla.py
 ```
 
 ## Supported Trap Types
@@ -313,11 +499,11 @@ The system can deploy various types of Canarytokens based on predicted attacker 
     pip3 install flask pymongo gunicorn paramiko
 
     # Start the listener (production)
-    ./start-canary-listener-ingester.sh
+    ./listener/start-canary-listener-ingester.sh
 
     # Or run directly for testing
     nohup python3 mongoDB/save-log-cowrie.py &
-    python3 listener9000.py 
+    python3 listener/listener9000.py 
     ```
 
 #### 1.7 Viewing Data
@@ -334,7 +520,8 @@ db.canary_alerts.find().sort({ _id: -1 }).limit(10)
 db.canary_alerts.find({ src_ip: "x.x.x.x" })
 
 # View Cowrie events
-db.cowrie_events. find().sort({ _ingested_at: -1 }).limit(10)
+db.getCollection("events-cowrie").find().sort({ timestamp: -1 })
+db.getCollection("events-cowrie-standard").find().sort({ timestamp: -1 })
 
 # Or use the helper script
 python3 view-alerts.py
@@ -691,7 +878,7 @@ The trained LoRA adapters will be saved to the `adapters/` directory.
 | `vm-with-cowrie-honeypot/connection_switcher.py` | Connection Switcher configuration (ports, backends) |
 | `scripts/cowrie_app/honeypot.py` | LLM API URL, Canarytoken API URL, webhook IP (Cowrie:2223 only) |
 | `etc/cowrie.cfg` | Cowrie configuration (separate for each instance) |
-| `listener9000.py` | MongoDB connection string |
+| `listener/listener9000.py` | MongoDB connection string |
 | `save-log-cowrie.py` | SSH connection to VM, polling interval |
 
 ### Environment Variables
