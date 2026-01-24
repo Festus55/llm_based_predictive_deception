@@ -1432,6 +1432,49 @@ def timestamp_creation(path):
     if fake_time > time.time():
         fake_time = time.time() - 10
     return fake_time
+
+def get_attacker_ip(transport):
+    """
+    Get the real attacker IP, supporting PROXY protocol.
+    Walks up the transport chain to find the SSH transport with getClientIP().
+    """
+    if not transport:
+        return "unknown"
+    
+    # Try to find the SSH transport with getClientIP method (PROXY protocol support)
+    # Walk up the chain: terminal.transport -> session -> conn -> transport (SSH)
+    current = transport
+    for _ in range(10):  # Prevent infinite loops
+        if hasattr(current, 'getClientIP'):
+            return current.getClientIP()
+        
+        # Try various paths up the transport chain
+        if hasattr(current, 'session'):
+            session = current.session
+            if hasattr(session, 'conn') and hasattr(session.conn, 'transport'):
+                current = session.conn.transport
+                continue
+        
+        if hasattr(current, 'transport'):
+            current = current.transport
+            continue
+            
+        break
+    
+    # Fallback to old method if getClientIP not found
+    if hasattr(transport, "getPeer"):
+        peer = transport.getPeer()
+        host = getattr(peer, "host", None)
+        if host:
+            return host
+        address = getattr(peer, "address", None)
+        if address:
+            return address
+        return str(peer)
+    
+    return "unknown"
+
+'''old
 def get_attacker_ip(transport):
     if not transport or not hasattr(transport, "getPeer"):
         return "unknown"
@@ -1449,6 +1492,7 @@ def get_attacker_ip(transport):
 
     # Final fallback
     return str(peer)
+'''
 
 @contextmanager
 def timeout(seconds):
@@ -1460,4 +1504,4 @@ def timeout(seconds):
         yield
     finally:
         signal.setitimer(signal.ITIMER_REAL, 0)
-#%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++   
+#%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
