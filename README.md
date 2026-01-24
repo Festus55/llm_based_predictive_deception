@@ -132,8 +132,681 @@ This architecture allows for:
 ```
 honeypot_predictive_deception/
 ├── README.md
-├── listener9000.py                    # Webhook listener for Canarytoken alerts
-...  TODO when repo ok
+├── adapters
+│   ├── README.md
+│   ├── gemma-3-12b
+│   │   ├── README.md
+│   │   ├── adapter_config.json
+│   │   ├── adapter_model.safetensors
+│   │   ├── added_tokens.json
+│   │   ├── chat_template.jinja
+│   │   ├── preprocessor_config.json
+│   │   ├── processor_config.json
+│   │   ├── special_tokens_map.json
+│   │   ├── tokenizer.json
+│   │   ├── tokenizer.model
+│   │   └── tokenizer_config.json
+│   ├── gemma-3-12b-2k
+│   │   ├── README.md
+│   │   ├── adapter_config.json
+│   │   ├── adapter_model.safetensors
+│   │   ├── added_tokens.json
+│   │   ├── chat_template.jinja
+│   │   ├── preprocessor_config.json
+│   │   ├── processor_config.json
+│   │   ├── special_tokens_map.json
+│   │   ├── tokenizer.json
+│   │   ├── tokenizer.model
+│   │   └── tokenizer_config.json
+│   ├── gemma-3-4b
+│   │   ├── README.md
+│   │   ├── adapter_config.json
+│   │   ├── adapter_model.safetensors
+│   │   ├── added_tokens.json
+│   │   ├── chat_template.jinja
+│   │   ├── preprocessor_config.json
+│   │   ├── processor_config.json
+│   │   ├── special_tokens_map.json
+│   │   ├── tokenizer.json
+│   │   ├── tokenizer.model
+│   │   └── tokenizer_config.json
+│   ├── gemma-3-4b-pt
+│   │   ├── README.md
+│   │   ├── adapter_config.json
+│   │   ├── adapter_model.safetensors
+│   │   ├── added_tokens.json
+│   │   ├── chat_template.jinja
+│   │   ├── preprocessor_config.json
+│   │   ├── processor_config.json
+│   │   ├── special_tokens_map.json
+│   │   ├── tokenizer.json
+│   │   ├── tokenizer.model
+│   │   └── tokenizer_config.json
+│   ├── gemma3_chat_template.jinja
+│   └── startup_API_server.sh
+├── canary
+│   ├── README.md
+│   ├── fetch-canary.py
+│   └── list-mails.py
+├── canarytokens-docker
+│   ├── LICENSE
+│   ├── README.md
+│   ├── canarytokens
+│   │   └── Dockerfile
+│   ├── certbot-nginx
+│   │   ├── Dockerfile
+│   │   ├── conf.d
+│   │   │   └── blocked_tokens.conf
+│   │   ├── nginx.conf
+│   │   └── start.sh
+│   ├── certbot.env.dist
+│   ├── common-services.yml
+│   ├── data
+│   │   └── README
+│   ├── docker-compose-aws-logging-letsencrypt.yml
+│   ├── docker-compose-aws-logging.yml
+│   ├── docker-compose-letsencrypt.yml
+│   ├── docker-compose.yml
+│   ├── frontend.env
+│   ├── frontend.env.dist
+│   ├── nginx
+│   │   ├── Dockerfile
+│   │   ├── conf.d
+│   │   │   └── blocked_tokens.conf
+│   │   └── nginx.conf
+│   ├── switchboard.env
+│   └── switchboard.env.dist
+├── dataset
+│   ├── README.md
+│   ├── enriched_data
+│   │   ├── README.md
+│   │   └── training_set.json
+│   ├── pre_enrichment_data
+│   │   ├── test.json
+│   │   └── train.json
+│   └── training_data
+│       ├── README.md
+│       ├── train.json
+│       ├── train.jsonl
+│       ├── val.json
+│       └── val.jsonl
+├── listener
+│   ├── README.md
+│   ├── listener9000.py
+│   └── start-canary-listener-ingester.sh
+├── mongoDB
+│   ├── README.md
+│   ├── save-cowrie-logs.py
+│   └── view-alerts.py
+├── scripts
+│   ├── README.md
+│   ├── batch_processing
+│   │   ├── README.md
+│   │   ├── data_distillation_prompts
+│   │   │   ├── README.md
+│   │   │   ├── trap_intent_prompt.md
+│   │   │   └── usertask.txt
+│   │   ├── prepare_batch_gcs_output.py
+│   │   └── start_batch_work.py
+│   ├── fine_tuning
+│   │   ├── README.md
+│   │   ├── unsloth_train_12B.py
+│   │   ├── unsloth_train_4B.py
+│   │   └── unsloth_train_4B_it.py
+│   └── training_processing
+│       ├── README.md
+│       ├── collapse_hx.py
+│       ├── parse_fromPC_toText.py
+│       ├── parse_response_toJSON.py
+│       ├── parse_toJSONL.py
+│       ├── prompt_completition_format.py
+│       ├── run_data_processing.sh
+│       ├── sanitizer_B64.py
+│       ├── sanitizer_hex.py
+│       └── split.py
+├── tex
+│   ├── README.md
+│   └── honeypot_predective_deception
+│       ├── imgs
+│       │   ├── Diagramma_logico_architettura.drawio.png
+│       │   └── diagramma dati.drawio.png
+│       ├── main.tex
+│       └── refs.bib
+└── vm-with-cowrie-honeypot
+    ├── README.md
+    ├── connection_switcher.py
+    ├── cowrie
+    │   ├── CHANGELOG.rst
+    │   ├── CONTRIBUTING.rst
+    │   ├── INSTALL.rst
+    │   ├── LICENSE.rst
+    │   ├── MANIFEST.in
+    │   ├── Makefile
+    │   ├── README.rst
+    │   ├── bin
+    │   │   ├── createdynamicprocess
+    │   │   └── regen-dropin.cache
+    │   ├── docker
+    │   │   ├── Dockerfile
+    │   │   └── docker-compose.yml
+    │   ├── docs
+    │   │   ├── BACKEND_POOL.rst
+    │   │   ├── CHANGELOG.rst
+    │   │   ├── CONTRIBUTING.rst
+    │   │   ├── FAQ.rst
+    │   │   ├── HONEYFS.rst
+    │   │   ├── INSTALL.rst
+    │   │   ├── LICENSE.rst
+    │   │   ├── LLM.rst
+    │   │   ├── Makefile
+    │   │   ├── OUTPUT.rst
+    │   │   ├── PROXY.rst
+    │   │   ├── README.rst
+    │   │   ├── SNAPSHOTS.rst
+    │   │   ├── _static
+    │   │   ├── conf.py
+    │   │   ├── datadog
+    │   │   │   └── README.rst
+    │   │   ├── docker
+    │   │   │   └── README.rst
+    │   │   ├── elk
+    │   │   │   ├── README.rst
+    │   │   │   ├── filebeat-cowrie.conf
+    │   │   │   ├── logstash-cowrie.conf
+    │   │   │   └── nginx-default
+    │   │   ├── graylog
+    │   │   │   └── README.rst
+    │   │   ├── index.rst
+    │   │   ├── kippo-graph
+    │   │   │   └── README.rst
+    │   │   ├── prometheus
+    │   │   │   ├── README.rst
+    │   │   │   └── prometheus.yaml
+    │   │   ├── requirements.txt
+    │   │   ├── sentinel
+    │   │   │   ├── README.rst
+    │   │   │   ├── cowrie-parser.txt
+    │   │   │   └── cowrie_workbook.json
+    │   │   ├── splunk
+    │   │   │   └── README.rst
+    │   │   ├── sql
+    │   │   │   ├── README.rst
+    │   │   │   ├── mysql.sql
+    │   │   │   ├── postgres.sql
+    │   │   │   ├── sqlite3.sql
+    │   │   │   ├── update10.sql
+    │   │   │   ├── update11.sql
+    │   │   │   ├── update12.sql
+    │   │   │   ├── update13.sql
+    │   │   │   ├── update14.sql
+    │   │   │   ├── update15.sql
+    │   │   │   ├── update16.sql
+    │   │   │   ├── update2.sql
+    │   │   │   ├── update3.sql
+    │   │   │   ├── update4.sql
+    │   │   │   ├── update5.sql
+    │   │   │   ├── update6.sql
+    │   │   │   ├── update7.sql
+    │   │   │   ├── update8.sql
+    │   │   │   └── update9.sql
+    │   │   ├── squid
+    │   │   │   ├── README.rst
+    │   │   │   └── squid.conf
+    │   │   ├── supervisor
+    │   │   │   ├── README.rst
+    │   │   │   └── cowrie.conf
+    │   │   ├── systemd
+    │   │   │   ├── README.rst
+    │   │   │   └── etc
+    │   │   │       ├── logrotate.d
+    │   │   │       │   └── cowrie
+    │   │   │       ├── rsyslog.d
+    │   │   │       │   └── cowrie.conf
+    │   │   │       └── systemd
+    │   │   │           └── system
+    │   │   │               ├── cowrie.service
+    │   │   │               └── cowrie.socket
+    │   │   └── virustotal
+    │   │       └── README.rst
+    │   ├── etc
+    │   │   ├── cowrie.cfg
+    │   │   ├── cowrie.cfg.dist
+    │   │   └── userdb.example
+    │   ├── honeyfs
+    │   │   ├── etc
+    │   │   │   ├── group
+    │   │   │   ├── host.conf
+    │   │   │   ├── hostname
+    │   │   │   ├── hosts
+    │   │   │   ├── inittab
+    │   │   │   ├── issue
+    │   │   │   ├── issue.net
+    │   │   │   ├── motd
+    │   │   │   ├── passwd
+    │   │   │   ├── resolv.conf
+    │   │   │   └── shadow
+    │   │   ├── home
+    │   │   │   ├── admin01
+    │   │   │   │   ├── id_rsa
+    │   │   │   │   └── id_rsa.pub
+    │   │   │   ├── carlod
+    │   │   │   │   ├── datasets
+    │   │   │   │   │   └── patient_cohort_A.csv
+    │   │   │   │   ├── experiment_results_2025.xlsx
+    │   │   │   │   ├── grant_budget_2026.xlsx
+    │   │   │   │   ├── papers
+    │   │   │   │   │   └── related-work-notes.md
+    │   │   │   │   ├── ssh_tunnel.sh
+    │   │   │   │   ├── thesis_draft_v3.docx
+    │   │   │   │   └── zotero_library.sqlite
+    │   │   │   ├── dev
+    │   │   │   │   ├── app.env
+    │   │   │   │   ├── notes.md
+    │   │   │   │   ├── requirements.txt
+    │   │   │   │   └── todo.txt
+    │   │   │   ├── devops
+    │   │   │   │   ├── infra_readme.md
+    │   │   │   │   ├── inventory_2026-01.csv
+    │   │   │   │   └── scripts
+    │   │   │   │       ├── backup.sh
+    │   │   │   │       └── rotate_logs.sh
+    │   │   │   ├── filippoc
+    │   │   │   │   ├── aws-keys.json
+    │   │   │   │   ├── docker-secrets.env
+    │   │   │   │   ├── inventory_2026-01.csv
+    │   │   │   │   ├── notes-incident-2025-12.txt
+    │   │   │   │   ├── root-creds.txt
+    │   │   │   │   └── vpn-unibo.ovpn
+    │   │   │   ├── richard
+    │   │   │   │   ├── laptop_todo.txt
+    │   │   │   │   └── notes_personal.txt
+    │   │   │   ├── ubuntu
+    │   │   │   │   ├── README.txt
+    │   │   │   │   └── deploy_notes.md
+    │   │   │   └── user
+    │   │   │       ├── downloads.txt
+    │   │   │       └── readme.txt
+    │   │   └── proc
+    │   │       ├── cpuinfo
+    │   │       ├── meminfo
+    │   │       ├── modules
+    │   │       ├── mounts
+    │   │       ├── net
+    │   │       │   └── arp
+    │   │       └── version
+    │   ├── pyproject.toml
+    │   ├── requirements-output.txt
+    │   ├── requirements.txt
+    │   ├── setup.py
+    │   ├── src
+    │   │   ├── backend_pool
+    │   │   │   ├── README.md
+    │   │   │   ├── __init__.py
+    │   │   │   ├── libvirt
+    │   │   │   │   ├── __init__.py
+    │   │   │   │   ├── backend_service.py
+    │   │   │   │   ├── guest_handler.py
+    │   │   │   │   ├── network_handler.py
+    │   │   │   │   └── snapshot_handler.py
+    │   │   │   ├── nat.py
+    │   │   │   ├── pool_server.py
+    │   │   │   ├── pool_service.py
+    │   │   │   ├── ssh_exec.py
+    │   │   │   ├── telnet_exec.py
+    │   │   │   └── util.py
+    │   │   ├── cowrie
+    │   │   │   ├── __init__.py
+    │   │   │   ├── commands
+    │   │   │   │   ├── __init__.py
+    │   │   │   │   ├── adduser.py
+    │   │   │   │   ├── apt.py
+    │   │   │   │   ├── awk.py
+    │   │   │   │   ├── base.py
+    │   │   │   │   ├── base64.py
+    │   │   │   │   ├── bash.py
+    │   │   │   │   ├── busybox.py
+    │   │   │   │   ├── cat.py
+    │   │   │   │   ├── chmod.py
+    │   │   │   │   ├── chpasswd.py
+    │   │   │   │   ├── crontab.py
+    │   │   │   │   ├── curl.py
+    │   │   │   │   ├── dd.py
+    │   │   │   │   ├── dig.py
+    │   │   │   │   ├── du.py
+    │   │   │   │   ├── env.py
+    │   │   │   │   ├── ethtool.py
+    │   │   │   │   ├── find.py
+    │   │   │   │   ├── finger.py
+    │   │   │   │   ├── free.py
+    │   │   │   │   ├── fs.py
+    │   │   │   │   ├── ftpget.py
+    │   │   │   │   ├── gcc.py
+    │   │   │   │   ├── git.py
+    │   │   │   │   ├── groups.py
+    │   │   │   │   ├── ifconfig.py
+    │   │   │   │   ├── iptables.py
+    │   │   │   │   ├── last.py
+    │   │   │   │   ├── locate.py
+    │   │   │   │   ├── ls.py
+    │   │   │   │   ├── lspci.py
+    │   │   │   │   ├── nc.py
+    │   │   │   │   ├── netstat.py
+    │   │   │   │   ├── nohup.py
+    │   │   │   │   ├── perl.py
+    │   │   │   │   ├── ping.py
+    │   │   │   │   ├── python.py
+    │   │   │   │   ├── scp.py
+    │   │   │   │   ├── service.py
+    │   │   │   │   ├── sleep.py
+    │   │   │   │   ├── ssh.py
+    │   │   │   │   ├── sudo.py
+    │   │   │   │   ├── tar.py
+    │   │   │   │   ├── tee.py
+    │   │   │   │   ├── tftp.py
+    │   │   │   │   ├── ulimit.py
+    │   │   │   │   ├── uname.py
+    │   │   │   │   ├── uniq.py
+    │   │   │   │   ├── unzip.py
+    │   │   │   │   ├── uptime.py
+    │   │   │   │   ├── wc.py
+    │   │   │   │   ├── wget.py
+    │   │   │   │   ├── which.py
+    │   │   │   │   └── yum.py
+    │   │   │   ├── core
+    │   │   │   │   ├── __init__.py
+    │   │   │   │   ├── artifact.py
+    │   │   │   │   ├── auth.py
+    │   │   │   │   ├── cef.py
+    │   │   │   │   ├── checkers.py
+    │   │   │   │   ├── config.py
+    │   │   │   │   ├── credentials.py
+    │   │   │   │   ├── fingerprint.py
+    │   │   │   │   ├── network.py
+    │   │   │   │   ├── output.py
+    │   │   │   │   ├── rate_limiter.py
+    │   │   │   │   ├── ttylog.py
+    │   │   │   │   ├── utils.py
+    │   │   │   │   └── uuid.py
+    │   │   │   ├── data
+    │   │   │   │   ├── __init__.py
+    │   │   │   │   ├── arch
+    │   │   │   │   │   ├── bsd-aarch64-lsb
+    │   │   │   │   │   ├── bsd-aarch64-msb
+    │   │   │   │   │   ├── bsd-bfin-msb
+    │   │   │   │   │   ├── bsd-mips-lsb
+    │   │   │   │   │   ├── bsd-mips-msb
+    │   │   │   │   │   ├── bsd-mips64-lsb
+    │   │   │   │   │   ├── bsd-mips64-msb
+    │   │   │   │   │   ├── bsd-powepc-msb
+    │   │   │   │   │   ├── bsd-powepc64-lsb
+    │   │   │   │   │   ├── bsd-riscv64-lsb
+    │   │   │   │   │   ├── bsd-sparc-msb
+    │   │   │   │   │   ├── bsd-sparc64-msb
+    │   │   │   │   │   ├── bsd-x32-lsb
+    │   │   │   │   │   ├── bsd-x64-lsb
+    │   │   │   │   │   ├── linux-aarch64-lsb
+    │   │   │   │   │   ├── linux-aarch64-msb
+    │   │   │   │   │   ├── linux-alpha-lsb
+    │   │   │   │   │   ├── linux-am33-lsb
+    │   │   │   │   │   ├── linux-arc-lsb
+    │   │   │   │   │   ├── linux-arc-msb
+    │   │   │   │   │   ├── linux-arm-lsb
+    │   │   │   │   │   ├── linux-arm-msb
+    │   │   │   │   │   ├── linux-avr32-lsb
+    │   │   │   │   │   ├── linux-bfin-lsb
+    │   │   │   │   │   ├── linux-c6x-lsb
+    │   │   │   │   │   ├── linux-c6x-msb
+    │   │   │   │   │   ├── linux-cris-lsb
+    │   │   │   │   │   ├── linux-frv-msb
+    │   │   │   │   │   ├── linux-h8300-msb
+    │   │   │   │   │   ├── linux-hppa-msb
+    │   │   │   │   │   ├── linux-hppa64-msb
+    │   │   │   │   │   ├── linux-ia64-lsb
+    │   │   │   │   │   ├── linux-m32r-msb
+    │   │   │   │   │   ├── linux-m68k-msb
+    │   │   │   │   │   ├── linux-microblaze-msb
+    │   │   │   │   │   ├── linux-mips-lsb
+    │   │   │   │   │   ├── linux-mips-msb
+    │   │   │   │   │   ├── linux-mips64-lsb
+    │   │   │   │   │   ├── linux-mips64-msb
+    │   │   │   │   │   ├── linux-mn10300-lsb
+    │   │   │   │   │   ├── linux-nios-lsb
+    │   │   │   │   │   ├── linux-nios-msb
+    │   │   │   │   │   ├── linux-powerpc-lsb
+    │   │   │   │   │   ├── linux-powerpc-msb
+    │   │   │   │   │   ├── linux-powerpc64-lsb
+    │   │   │   │   │   ├── linux-powerpc64-msb
+    │   │   │   │   │   ├── linux-riscv64-lsb
+    │   │   │   │   │   ├── linux-s390x-msb
+    │   │   │   │   │   ├── linux-sh-lsb
+    │   │   │   │   │   ├── linux-sh-msb
+    │   │   │   │   │   ├── linux-sparc-msb
+    │   │   │   │   │   ├── linux-sparc64-msb
+    │   │   │   │   │   ├── linux-tilegx-lsb
+    │   │   │   │   │   ├── linux-tilegx-msb
+    │   │   │   │   │   ├── linux-tilegx64-lsb
+    │   │   │   │   │   ├── linux-tilegx64-msb
+    │   │   │   │   │   ├── linux-x64-lsb
+    │   │   │   │   │   ├── linux-x86-lsb
+    │   │   │   │   │   ├── linux-xtensa-msb
+    │   │   │   │   │   ├── osx-x32-lsb
+    │   │   │   │   │   ├── osx-x64-lsb
+    │   │   │   │   │   └── src
+    │   │   │   │   │       ├── README
+    │   │   │   │   │       ├── nop-arc.asm
+    │   │   │   │   │       ├── nop-bfin.asm
+    │   │   │   │   │       ├── nop-hppa64.asm
+    │   │   │   │   │       ├── nop-ia64.asm
+    │   │   │   │   │       ├── nop-mips.asm
+    │   │   │   │   │       ├── nop-mips64.asm
+    │   │   │   │   │       ├── nop-osx.asm
+    │   │   │   │   │       └── nop.asm
+    │   │   │   │   ├── cmdoutput.json
+    │   │   │   │   ├── fs.pickle
+    │   │   │   │   ├── pool_configs
+    │   │   │   │   │   ├── aarch64_guest.xml
+    │   │   │   │   │   ├── default_filter.xml
+    │   │   │   │   │   ├── default_guest.xml
+    │   │   │   │   │   ├── default_network.xml
+    │   │   │   │   │   ├── wrt_arm_guest.xml
+    │   │   │   │   │   └── wrt_x86_guest.xml
+    │   │   │   │   └── txtcmds
+    │   │   │   │       ├── bin
+    │   │   │   │       │   ├── df
+    │   │   │   │       │   ├── dmesg
+    │   │   │   │       │   ├── enable
+    │   │   │   │       │   ├── mount
+    │   │   │   │       │   ├── stty
+    │   │   │   │       │   ├── sync
+    │   │   │   │       │   └── ulimit
+    │   │   │   │       └── usr
+    │   │   │   │           ├── bin
+    │   │   │   │           │   ├── clear
+    │   │   │   │           │   ├── emacs
+    │   │   │   │           │   ├── getconf
+    │   │   │   │           │   ├── killall
+    │   │   │   │           │   ├── locate
+    │   │   │   │           │   ├── lscpu
+    │   │   │   │           │   ├── make
+    │   │   │   │           │   ├── nano
+    │   │   │   │           │   ├── nproc
+    │   │   │   │           │   ├── pico
+    │   │   │   │           │   ├── pkill
+    │   │   │   │           │   ├── top
+    │   │   │   │           │   ├── vi
+    │   │   │   │           │   └── vim
+    │   │   │   │           └── sbin
+    │   │   │   │               └── vipw
+    │   │   │   ├── insults
+    │   │   │   │   ├── __init__.py
+    │   │   │   │   └── insults.py
+    │   │   │   ├── llm
+    │   │   │   │   ├── __init__.py
+    │   │   │   │   ├── avatar.py
+    │   │   │   │   ├── llm.py
+    │   │   │   │   ├── protocol.py
+    │   │   │   │   ├── realm.py
+    │   │   │   │   ├── server.py
+    │   │   │   │   ├── session.py
+    │   │   │   │   └── telnet.py
+    │   │   │   ├── output
+    │   │   │   │   ├── README.md
+    │   │   │   │   ├── abuseipdb.py
+    │   │   │   │   ├── axiom.py
+    │   │   │   │   ├── crashreporter.py
+    │   │   │   │   ├── csirtg.py
+    │   │   │   │   ├── cuckoo.py
+    │   │   │   │   ├── datadog.py
+    │   │   │   │   ├── discord.py
+    │   │   │   │   ├── dshield.py
+    │   │   │   │   ├── elasticsearch.py
+    │   │   │   │   ├── graylog.py
+    │   │   │   │   ├── greynoise.py
+    │   │   │   │   ├── hpfeeds3.py
+    │   │   │   │   ├── influx.py
+    │   │   │   │   ├── jsonlog.py
+    │   │   │   │   ├── localsyslog.py
+    │   │   │   │   ├── malshare.py
+    │   │   │   │   ├── misp.py
+    │   │   │   │   ├── mongodb.py
+    │   │   │   │   ├── mysql.py
+    │   │   │   │   ├── oraclecloud.py
+    │   │   │   │   ├── postgresql.py
+    │   │   │   │   ├── prometheus.py
+    │   │   │   │   ├── redis.py
+    │   │   │   │   ├── remotesyslog.py
+    │   │   │   │   ├── rethinkdblog.py
+    │   │   │   │   ├── reversedns.py
+    │   │   │   │   ├── rmq.py
+    │   │   │   │   ├── s3.py
+    │   │   │   │   ├── slack.py
+    │   │   │   │   ├── socketlog.py
+    │   │   │   │   ├── splunk.py
+    │   │   │   │   ├── sqlite.py
+    │   │   │   │   ├── telegram.py
+    │   │   │   │   ├── textlog.py
+    │   │   │   │   ├── virustotal.py
+    │   │   │   │   └── xmpp.py
+    │   │   │   ├── pool_interface
+    │   │   │   │   ├── __init__.py
+    │   │   │   │   ├── client.py
+    │   │   │   │   └── handler.py
+    │   │   │   ├── python
+    │   │   │   │   ├── __init__.py
+    │   │   │   │   └── logfile.py
+    │   │   │   ├── scripts
+    │   │   │   │   ├── __init__.py
+    │   │   │   │   ├── asciinema.py
+    │   │   │   │   ├── cowrie.py
+    │   │   │   │   ├── createdynamicprocess.py
+    │   │   │   │   ├── createfs.py
+    │   │   │   │   ├── fsctl.py
+    │   │   │   │   └── playlog.py
+    │   │   │   ├── shell
+    │   │   │   │   ├── README.md
+    │   │   │   │   ├── __init__.py
+    │   │   │   │   ├── avatar.py
+    │   │   │   │   ├── command.py
+    │   │   │   │   ├── customparser.py
+    │   │   │   │   ├── filetransfer.py
+    │   │   │   │   ├── fs.py
+    │   │   │   │   ├── honeypot.py
+    │   │   │   │   ├── parser.py
+    │   │   │   │   ├── pipe.py
+    │   │   │   │   ├── protocol.py
+    │   │   │   │   ├── pwd.py
+    │   │   │   │   ├── realm.py
+    │   │   │   │   ├── server.py
+    │   │   │   │   ├── session.py
+    │   │   │   │   └── templates
+    │   │   │   │       └── template.json
+    │   │   │   ├── ssh
+    │   │   │   │   ├── __init__.py
+    │   │   │   │   ├── channel.py
+    │   │   │   │   ├── connection.py
+    │   │   │   │   ├── factory.py
+    │   │   │   │   ├── forwarding.py
+    │   │   │   │   ├── keys.py
+    │   │   │   │   ├── session.py
+    │   │   │   │   ├── transport.py
+    │   │   │   │   └── userauth.py
+    │   │   │   ├── ssh_proxy
+    │   │   │   │   ├── README.md
+    │   │   │   │   ├── __init__.py
+    │   │   │   │   ├── client_transport.py
+    │   │   │   │   ├── protocols
+    │   │   │   │   │   ├── __init__.py
+    │   │   │   │   │   ├── base_protocol.py
+    │   │   │   │   │   ├── exec_term.py
+    │   │   │   │   │   ├── port_forward.py
+    │   │   │   │   │   ├── sftp.py
+    │   │   │   │   │   ├── ssh.py
+    │   │   │   │   │   └── term.py
+    │   │   │   │   ├── server_transport.py
+    │   │   │   │   ├── userauth.py
+    │   │   │   │   └── util.py
+    │   │   │   ├── telnet
+    │   │   │   │   ├── __init__.py
+    │   │   │   │   ├── factory.py
+    │   │   │   │   ├── session.py
+    │   │   │   │   ├── transport.py
+    │   │   │   │   └── userauth.py
+    │   │   │   ├── telnet_proxy
+    │   │   │   │   ├── README.md
+    │   │   │   │   ├── __init__.py
+    │   │   │   │   ├── client_transport.py
+    │   │   │   │   ├── handler.py
+    │   │   │   │   └── server_transport.py
+    │   │   │   ├── test
+    │   │   │   │   ├── __init__.py
+    │   │   │   │   ├── fake_server.py
+    │   │   │   │   ├── fake_transport.py
+    │   │   │   │   ├── proxy_compare.py
+    │   │   │   │   ├── test_awk.py
+    │   │   │   │   ├── test_base64.py
+    │   │   │   │   ├── test_base_commands.py
+    │   │   │   │   ├── test_cat.py
+    │   │   │   │   ├── test_chmod.py
+    │   │   │   │   ├── test_echo.py
+    │   │   │   │   ├── test_fd_redirection.py
+    │   │   │   │   ├── test_ftpget.py
+    │   │   │   │   ├── test_ls.py
+    │   │   │   │   ├── test_network.py
+    │   │   │   │   ├── test_parser.py
+    │   │   │   │   ├── test_proxy.py
+    │   │   │   │   ├── test_tee.py
+    │   │   │   │   ├── test_tftp.py
+    │   │   │   │   ├── test_uniq.py
+    │   │   │   │   ├── test_utils.py
+    │   │   │   │   └── test_virustotal.py
+    │   │   │   └── vendor
+    │   │   │       ├── __init__.py
+    │   │   │       └── ja4
+    │   │   │           ├── README.md
+    │   │   │           ├── __init__.py
+    │   │   │           ├── common.py
+    │   │   │           ├── ja4.py
+    │   │   │           ├── ja4h.py
+    │   │   │           ├── ja4ssh.py
+    │   │   │           └── ja4x.py
+    │   │   └── twisted
+    │   │       └── plugins
+    │   │           └── cowrie_plugin.py
+    │   └── var
+    │       ├── lib
+    │       │   └── cowrie
+    │       └── run
+    └── cowrie_vanilla
+        ├── etc
+        │   └── cowrie.cfg
+        └── src
+            └── cowrie
+                ├── commands
+                │   ├── chmod.py
+                │   ├── curl.py
+                │   └── wget.py
+                └── shell
+                    └── honeypot_vanilla.py
 ```
 
 ## Supported Trap Types
@@ -313,11 +986,11 @@ The system can deploy various types of Canarytokens based on predicted attacker 
     pip3 install flask pymongo gunicorn paramiko
 
     # Start the listener (production)
-    ./start-canary-listener-ingester.sh
+    ./listener/start-canary-listener-ingester.sh
 
     # Or run directly for testing
     nohup python3 mongoDB/save-log-cowrie.py &
-    python3 listener9000.py 
+    python3 listener/listener9000.py 
     ```
 
 #### 1.7 Viewing Data
@@ -692,7 +1365,7 @@ The trained LoRA adapters will be saved to the `adapters/` directory.
 | `vm-with-cowrie-honeypot/connection_switcher.py` | Connection Switcher configuration (ports, backends) |
 | `scripts/cowrie_app/honeypot.py` | LLM API URL, Canarytoken API URL, webhook IP (Cowrie:2223 only) |
 | `etc/cowrie.cfg` | Cowrie configuration (separate for each instance) |
-| `listener9000.py` | MongoDB connection string |
+| `listener/listener9000.py` | MongoDB connection string |
 | `save-log-cowrie.py` | SSH connection to VM, polling interval |
 
 ### Environment Variables
