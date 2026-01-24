@@ -139,9 +139,8 @@ The ultimate goal is to transition from a static system to a \textbf{dynamic res
 % TODO: controllare se espandere la sezione o va bene così
 \section{Datasets}
 \label{sec:datasets}
-We use two publicly available SSH honeypot datasets \cite{CyberLab_JSON_DataSet,CowrieHoneypot_DataSet}. One dataset is used as primary training data (large-scale Cowrie logs), while the other is used as an external evaluation set to test cross-domain generalization (smaller, independently collected sessions). Both datasets are preprocessed to extract ordered command sequences per session, along with timestamps for temporal analysis (see \hyperref[sec:dataset-prep]{dataset preparation section}).
-
-The research is carried out on the basis of two data sets \cite{CyberLab_JSON_DataSet} \cite{CowrieHoneypot_DataSet}. Those work as a training base \footnote{the latter}, and as a valid counterpart \footnote{the former, considering it has a notably smaller set of attacks}, in order to measure the relative performance of predictive deception models to the reactive ones.\\
+The fine-tuning is carried out on the basis of two data sets \cite{CyberLab_JSON_DataSet} \cite{CowrieHoneypot_DataSet}. Those work as a training base \footnote{the latter}, and as a valid counterpart \footnote{the former, considering it has a notably smaller set of attacks}, in order to measure the relative performance of predictive deception models to the reactive ones.\\
+Both datasets are made by Cowrie honeypot logs, in JSON format, collected from real world attacks. The first one \cite{CyberLab_JSON_DataSet} is a smaller dataset, with around 2000 sessions, collected from a Cowrie honeypot deployed for 3 months in 2021 by CyberLab \cite{CyberLab_website}, while the second one \cite{CowrieHoneypot_DataSet} is a larger dataset, with more than 9000 sessions, collected from a Cowrie honeypot deployed for more than 2 years (from 2018 to 2020) by an anonymous researcher.\\
 
 \section{Methodology}
 \label{sec:methodology}
