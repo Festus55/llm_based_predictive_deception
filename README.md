@@ -334,7 +334,8 @@ db.canary_alerts.find().sort({ _id: -1 }).limit(10)
 db.canary_alerts.find({ src_ip: "x.x.x.x" })
 
 # View Cowrie events
-db.cowrie_events. find().sort({ _ingested_at: -1 }).limit(10)
+db.getCollection("events-cowrie").find().sort({ timestamp: -1 })
+db.getCollection("events-cowrie-standard").find().sort({ timestamp: -1 })
 
 # Or use the helper script
 python3 view-alerts.py
