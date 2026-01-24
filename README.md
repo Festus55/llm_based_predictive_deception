@@ -266,9 +266,9 @@ honeypot_predictive_deception/
     │   │   │   ├── __init__.py
     │   │   │   ├── commands
     │   │   │   │   ├── ...
-    │   │   │   │   ├── chmod.py
-    │   │   │   │   ├── curl.py
-    │   │   │   │   └── wget.py
+    │   │   │   │   ├── chmod.py          # Modified
+    │   │   │   │   ├── curl.py           # Modified
+    │   │   │   │   └── wget.py           # Modified
     │   │   │   ├── core/
     │   │   │   │   └── ...
     │   │   │   ├── data/
@@ -287,9 +287,9 @@ honeypot_predictive_deception/
     │   │   │   │   └── ...
     │   │   │   ├── shell
     │   │   │   │   ├── ...
-    │   │   │   │   ├── fs.py  
-    │   │   │   │   ├── honeypot.py
-    │   │   │   │   └── templates
+    │   │   │   │   ├── fs.py                # Modified
+    │   │   │   │   ├── honeypot.py          # Modified
+    │   │   │   │   └── templates            # Added
     │   │   │   │       └── template.json
     │   │   │   ├── ssh/
     │   │   │   │   └── ...
