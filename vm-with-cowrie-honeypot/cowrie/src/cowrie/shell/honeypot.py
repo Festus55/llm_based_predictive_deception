@@ -269,7 +269,7 @@ class HoneyPotShell:
             return
         if self.call_counter == 0:
             try:
-                # 1. Ask LLM API
+                # LLM API call 
                 message = TEMPLATE_PROMPT.replace(r"{{command_history}}", self.cmd_history)
 
                 payload = {
@@ -286,14 +286,14 @@ class HoneyPotShell:
                 predictions = yield json.loads(content)
 
                 
-                # 2. Assign Tasks (Fan-Out)
+                # Task assignement (Fan-Out)
                 tasks = []
                 for pred in predictions:
                     d = self.apply_strategy(pred)
                     if isinstance(d, defer.Deferred):
                         tasks.append(d)
 
-                # 3. Wait for mutations (Fan-In)
+                # Fan-In
                 if tasks:
                     yield defer.gatherResults(tasks, consumeErrors=True)
                     
@@ -1211,7 +1211,7 @@ class HoneyPotShell:
         Reads /etc/passwd and caches it into {username: (uid, gid)}.
         """
         try:
-            # 1. obtaining of passwd from /etc/
+            # obtaining passwd from /etc/
             etc_node = self.protocol.fs.resolve_path("/etc", "/")
             files_in_etc = self.protocol.fs.get_path(etc_node)
             
@@ -1221,7 +1221,7 @@ class HoneyPotShell:
                 log.msg("Warning: /etc/passwd not found in FS simulation")
                 return
 
-            # 2. getting passwd content from real file
+            # getting passwd content
             real_path = passwd_entry[fs.A_REALFILE]
             
             if real_path and os.path.exists(real_path):
@@ -1231,7 +1231,7 @@ class HoneyPotShell:
                         if not line or line.startswith("#"):
                             continue
                         
-                        # Formato standard: user:x:uid:gid:comment:home:shell
+                        # standard passwd line format user:x:uid:gid:comment:home:shell
                         parts = line.split(":")
                         if len(parts) >= 4:
                             username = parts[0]
@@ -1258,7 +1258,7 @@ class HoneyPotShell:
         if len(parts) >= 2 and parts[0] == 'home':
             target_username = parts[1]
             
-            # 1. DB lookup
+            # DB lookup
             if target_username in self.user_db_cache:
                 uid, gid = self.user_db_cache[target_username]
                 return int(uid), int(gid)
@@ -1433,45 +1433,22 @@ def timestamp_creation(path):
         fake_time = time.time() - 10
     return fake_time
 def get_attacker_ip(transport):
-    """
-    Get the real attacker IP, supporting PROXY protocol.
-    Walks up the transport chain to find the SSH transport with getClientIP().
-    """
-    if not transport:
+    if not transport or not hasattr(transport, "getPeer"):
         return "unknown"
-    
-    # Try to find the SSH transport with getClientIP method (PROXY protocol support)
-    # Walk up the chain: terminal.transport -> session -> conn -> transport (SSH)
-    current = transport
-    for _ in range(10):  # Prevent infinite loops
-        if hasattr(current, 'getClientIP'):
-            return current.getClientIP()
-        
-        # Try various paths up the transport chain
-        if hasattr(current, 'session'):
-            session = current.session
-            if hasattr(session, 'conn') and hasattr(session.conn, 'transport'):
-                current = session.conn.transport
-                continue
-        
-        if hasattr(current, 'transport'):
-            current = current.transport
-            continue
-            
-        break
-    
-    # Fallback to old method if getClientIP not found
-    if hasattr(transport, "getPeer"):
-        peer = transport.getPeer()
-        host = getattr(peer, "host", None)
-        if host:
-            return host
-        address = getattr(peer, "address", None)
-        if address:
-            return address
-        return str(peer)
-    
-    return "unknown"
+
+    peer = transport.getPeer()
+
+    # Safe attribute access (no hasattr)
+    host = getattr(peer, "host", None)
+    if host:
+        return host
+
+    address = getattr(peer, "address", None)
+    if address:
+        return address
+
+    # Final fallback
+    return str(peer)
 
 @contextmanager
 def timeout(seconds):

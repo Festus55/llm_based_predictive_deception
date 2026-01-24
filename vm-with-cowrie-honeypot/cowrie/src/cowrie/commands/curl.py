@@ -540,7 +540,7 @@ class Command_curl(HoneyPotCommand):
         Analyzes LLM past predictions to enrich logging
         """
         
-        # 1. ai prediction queue and session id retrieval 
+        # ai prediction queue and session id retrieval 
         raw_queue = getattr(self.protocol, "ai_prediction_queue", [])
         now = time.time()
         sid = getattr(self.protocol, "sess_id", None)
@@ -554,7 +554,7 @@ class Command_curl(HoneyPotCommand):
         active_count = len(valid_predictions)
         target_url = self.url.decode('utf-8', errors='ignore')
         
-        # 2. context aware memo contruction
+        # context aware memo contruction
         if active_count > 0:
             # last prediction as the most reliable
             best_pred = valid_predictions[-1]
@@ -575,7 +575,7 @@ class Command_curl(HoneyPotCommand):
                     f"URL: {target_url}\n"
                     f"AI Status: No active predictions.")
 
-        # 3. API asycnh call
+        # API asycnh call
         payload = {
             "memo": f"{memo}\ncowrie_session_id={sid}",
             "type": "web",
