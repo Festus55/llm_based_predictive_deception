@@ -149,33 +149,7 @@ honeypot_predictive_deception/
 │   ├── fetch-canary.py
 │   └── list-mails.py
 ├── canarytokens-docker
-│   ├── LICENSE
-│   ├── README.md
-│   ├── canarytokens
-│   │   └── Dockerfile
-│   ├── certbot-nginx
-│   │   ├── Dockerfile
-│   │   ├── conf.d
-│   │   │   └── blocked_tokens.conf
-│   │   ├── nginx.conf
-│   │   └── start.sh
-│   ├── certbot.env.dist
-│   ├── common-services.yml
-│   ├── data
-│   │   └── README
-│   ├── docker-compose-aws-logging-letsencrypt.yml
-│   ├── docker-compose-aws-logging.yml
-│   ├── docker-compose-letsencrypt.yml
-│   ├── docker-compose.yml
-│   ├── frontend.env
-│   ├── frontend.env.dist
-│   ├── nginx
-│   │   ├── Dockerfile
-│   │   ├── conf.d
-│   │   │   └── blocked_tokens.conf
-│   │   └── nginx.conf
-│   ├── switchboard.env
-│   └── switchboard.env.dist
+│   ├── ...
 ├── dataset
 │   ├── README.md
 │   ├── enriched_data
@@ -224,102 +198,27 @@ honeypot_predictive_deception/
 │       ├── sanitizer_B64.py
 │       ├── sanitizer_hex.py
 │       └── split.py
-├── tex
-│   ├── README.md
-│   └── honeypot_predective_deception
-│       ├── imgs
-│       │   ├── Diagramma_logico_architettura.drawio.png
-│       │   └── diagramma dati.drawio.png
-│       ├── main.tex
-│       └── refs.bib
 └── vm-with-cowrie-honeypot
     ├── README.md
     ├── connection_switcher.py
     ├── cowrie
-    │   ├── CHANGELOG.rst
-    │   ├── CONTRIBUTING.rst
-    │   ├── INSTALL.rst
-    │   ├── LICENSE.rst
-    │   ├── MANIFEST.in
-    │   ├── Makefile
-    │   ├── README.rst
-    │   ├── bin/
-    │   │   └── ...
-    │   ├── docker/
-    │   │   └── ...
-    │   ├── docs/
-    │   │   └── ...
-    │   ├── etc/
-    │   │   ├── ...    
-    │   │   ├── cowrie.cfg
-    │   │   └── ...
-    │   ├── honeyfs/
-    │   │   └── ...
-    │   ├── pyproject.toml
-    │   ├── requirements-output.txt
-    │   ├── requirements.txt
-    │   ├── setup.py
+    │   ├── ...
     │   ├── src
-    │   │   ├── backend_pool/
-    │   │   │   └── ...
     │   │   ├── cowrie
     │   │   │   ├── __init__.py
     │   │   │   ├── commands
     │   │   │   │   ├── ...
-    │   │   │   │   ├── chmod.py          # Modified
-    │   │   │   │   ├── curl.py           # Modified
-    │   │   │   │   └── wget.py           # Modified
-    │   │   │   ├── core/
-    │   │   │   │   └── ...
-    │   │   │   ├── data/
-    │   │   │   │   └── ...
-    │   │   │   ├── insults/
-    │   │   │   │   └── ...
-    │   │   │   ├── llm/
-    │   │   │   │   └── ...
-    │   │   │   ├── output/
-    │   │   │   │   └── ...
-    │   │   │   ├── pool_interface/
-    │   │   │   │   └── ...
-    │   │   │   ├── python/
-    │   │   │   │   └── ...
-    │   │   │   ├── scripts/
-    │   │   │   │   └── ...
+    │   │   │   │   ├── chmod.py # Modified
+    │   │   │   │   ├── curl.py  # Modified
+    │   │   │   │   └── wget.py  # Modified
     │   │   │   ├── shell
     │   │   │   │   ├── ...
-    │   │   │   │   ├── fs.py                # Modified
-    │   │   │   │   ├── honeypot.py          # Modified
-    │   │   │   │   └── templates            # Added
+    │   │   │   │   ├── fs.py              # Modified
+    │   │   │   │   ├── honeypot.py        # Modified
+    │   │   │   │   └── templates          # Added
     │   │   │   │       └── template.json
-    │   │   │   ├── ssh/
-    │   │   │   │   └── ...
-    │   │   │   ├── ssh_proxy/
-    │   │   │   │   └── ...
-    │   │   │   ├── telnet/
-    │   │   │   │   └── ...
-    │   │   │   ├── telnet_proxy/
-    │   │   │   │   └── ...
-    │   │   │   ├── test/
-    │   │   │   │   └── ...
-    │   │   │   └── vendor/
-    │   │   │   │   └── ...
-    │   │   └── twisted/
-    │   │       └── ...
-    │   └── var
-    │       ├── lib
-    │       │   └── cowrie
-    │       └── run
-    └── cowrie_vanilla
-        ├── etc
-        │   └── cowrie.cfg
-        └── src
-            └── cowrie
-                ├── commands
-                │   ├── chmod.py
-                │   ├── curl.py
-                │   └── wget.py
-                └── shell
-                    └── honeypot_vanilla.py
+    └── cowrie-standard
+        ├── ...
 ```
 
 ## Supported Trap Types
