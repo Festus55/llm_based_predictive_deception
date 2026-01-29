@@ -1,5 +1,5 @@
 ---
-title  Honeypot Predictive Deception
+title: Honeypot Predictive Deception
 authors: 
   - name: Leonardo Barone
   - name: Leonardo Ciacco
