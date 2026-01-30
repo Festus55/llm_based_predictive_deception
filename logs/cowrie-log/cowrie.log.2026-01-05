@@ -1,0 +1,238 @@
+2026-01-04T23:07:14.156980+0100 [-] Reading configuration from ['/home/cowrie/cowrie/etc/cowrie.cfg.dist', '/home/cowrie/cowrie/etc/cowrie.cfg']
+2026-01-04T23:07:14.323187+0100 [-] Python Version 3.11.2 (main, Apr 28 2025, 14:11:48) [GCC 12.2.0]
+2026-01-04T23:07:14.323243+0100 [-] Twisted Version 25.5.0
+2026-01-04T23:07:14.323264+0100 [-] Cowrie Version 2.9.5.dev1+g3f60101c7.d20260104
+2026-01-04T23:07:14.323282+0100 [-] Sensor UUID: 201298c2-e9b9-11f0-a649-525400efcb90
+2026-01-04T23:07:14.327591+0100 [-] Loaded output engine: jsonlog
+2026-01-04T23:07:14.329340+0100 [twisted.scripts._twistd_unix.UnixAppLogger#info] twistd 25.5.0 (/home/cowrie/cowrie/cowrie-env/bin/python 3.11.2) starting up.
+2026-01-04T23:07:14.329523+0100 [twisted.scripts._twistd_unix.UnixAppLogger#info] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-01-04T23:07:14.353076+0100 [-] CowrieSSHFactory starting on 2222
+2026-01-04T23:07:14.353898+0100 [cowrie.ssh.factory.CowrieSSHFactory#info] Starting factory <cowrie.ssh.factory.CowrieSSHFactory object at 0x7fa8489d3ad0>
+2026-01-04T23:07:14.575798+0100 [-] Ready to accept SSH connections
+2026-01-04T23:07:44.833091+0100 [cowrie.ssh.factory.CowrieSSHFactory] New connection: 79.26.242.29:37364 (192.168.122.17:2222) [session: 475cee6e70f6]
+2026-01-04T23:07:44.834058+0100 [HoneyPotSSHTransport,0,79.26.242.29] Remote SSH version: SSH-2.0-OpenSSH_10.2
+2026-01-04T23:07:45.085554+0100 [HoneyPotSSHTransport,0,79.26.242.29] SSH client hassh fingerprint: eeca2460550b9ded084ecf2f70a75356
+2026-01-04T23:07:45.086762+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#debug] kex alg=b'curve25519-sha256' key alg=b'ssh-ed25519'
+2026-01-04T23:07:45.086904+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#debug] outgoing: b'aes128-ctr' b'hmac-sha2-256' b'none'
+2026-01-04T23:07:45.086984+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#debug] incoming: b'aes128-ctr' b'hmac-sha2-256' b'none'
+2026-01-04T23:07:45.520621+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#info] connection lost
+2026-01-04T23:07:45.520869+0100 [HoneyPotSSHTransport,0,79.26.242.29] Connection lost after 0.7 seconds
+2026-01-04T23:07:56.232140+0100 [cowrie.ssh.factory.CowrieSSHFactory] New connection: 79.26.242.29:37472 (192.168.122.17:2222) [session: ff19a2bcfbb5]
+2026-01-04T23:07:56.232878+0100 [HoneyPotSSHTransport,1,79.26.242.29] Remote SSH version: SSH-2.0-OpenSSH_10.2
+2026-01-04T23:07:56.523375+0100 [HoneyPotSSHTransport,1,79.26.242.29] SSH client hassh fingerprint: eeca2460550b9ded084ecf2f70a75356
+2026-01-04T23:07:56.524652+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#debug] kex alg=b'curve25519-sha256' key alg=b'ssh-ed25519'
+2026-01-04T23:07:56.524801+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#debug] outgoing: b'aes128-ctr' b'hmac-sha2-256' b'none'
+2026-01-04T23:07:56.524878+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#debug] incoming: b'aes128-ctr' b'hmac-sha2-256' b'none'
+2026-01-04T23:07:59.194623+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#debug] NEW KEYS
+2026-01-04T23:07:59.375490+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#debug] starting service b'ssh-userauth'
+2026-01-04T23:08:00.217767+0100 [cowrie.ssh.userauth.HoneyPotSSHUserAuthServer#debug] b'root' trying auth b'none'
+2026-01-04T23:08:00.371114+0100 [cowrie.ssh.userauth.HoneyPotSSHUserAuthServer#debug] b'root' trying auth b'publickey'
+2026-01-04T23:08:00.371682+0100 [HoneyPotSSHTransport,1,79.26.242.29] public key attempt for user b'root' of type b'ssh-ed25519' with fingerprint 56:14:5b:d3:25:0a:16:5f:f3:fd:ef:92:e6:b8:4f:69
+2026-01-04T23:08:00.372664+0100 [HoneyPotSSHTransport,1,79.26.242.29] public key login attempt for [b'root'] failed
+2026-01-04T23:08:00.373740+0100 [cowrie.ssh.userauth.HoneyPotSSHUserAuthServer#debug] b'root' failed auth b'publickey'
+2026-01-04T23:08:00.373883+0100 [cowrie.ssh.userauth.HoneyPotSSHUserAuthServer#debug] reason: ('Incorrect signature', None)
+2026-01-04T23:08:06.831043+0100 [cowrie.ssh.userauth.HoneyPotSSHUserAuthServer#debug] b'root' trying auth b'password'
+2026-01-04T23:08:06.831983+0100 [HoneyPotSSHTransport,1,79.26.242.29] login attempt [b'root'/b'jsjs'] succeeded
+2026-01-04T23:08:06.832918+0100 [HoneyPotSSHTransport,1,79.26.242.29] Initialized emulated server as architecture: x86_64
+2026-01-04T23:08:06.833275+0100 [cowrie.ssh.userauth.HoneyPotSSHUserAuthServer#debug] b'root' authenticated with b'password'
+2026-01-04T23:08:06.833528+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#debug] starting service b'ssh-connection'
+2026-01-04T23:08:07.028636+0100 [cowrie.ssh.connection.CowrieSSHConnection#debug] got channel b'session' request
+2026-01-04T23:08:07.029025+0100 [cowrie.ssh.session.HoneyPotSSHSession#info] channel open
+2026-01-04T23:08:07.029222+0100 [cowrie.ssh.connection.CowrieSSHConnection#debug] got global b'no-more-sessions@openssh.com' request
+2026-01-04T23:08:07.226756+0100 [SSHChannel session (0) on SSHService b'ssh-connection' on HoneyPotSSHTransport,1,79.26.242.29] ERROR: Failed to load filesystem
+	Traceback (most recent call last):
+	  File "/home/cowrie/cowrie/src/cowrie/shell/fs.py", line 114, in __init__
+	    with open(CowrieConfig.get("shell", "filesystem"), "rb") as f:
+	builtins.FileNotFoundError: [Errno 2] No such file or directory: 'custom.pickle'
+	
+2026-01-04T23:08:07.227324+0100 [SSHChannel session (0) on SSHService b'ssh-connection' on HoneyPotSSHTransport,1,79.26.242.29] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/conch/ssh/channel.py", line 162, in requestReceived
+	    return f(data)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/conch/ssh/session.py", line 108, in request_pty_req
+	    self.session = ISession(self.avatar)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/python/components.py", line 105, in _hook
+	    return factory(ob)
+	  File "/home/cowrie/cowrie/src/cowrie/shell/session.py", line 50, in __init__
+	    self.server.initFileSystem(self.avatar.home)
+	  File "/home/cowrie/cowrie/src/cowrie/shell/server.py", line 85, in initFileSystem
+	    self.fs = fs.HoneyPotFilesystem(self.arch, home)
+	  File "/home/cowrie/cowrie/src/cowrie/shell/fs.py", line 125, in __init__
+	    sys.exit(2)
+	builtins.SystemExit: 2
+	
+2026-01-04T23:08:07.228592+0100 [twisted.conch.ssh.session#info] Getting shell
+2026-01-04T23:08:07.228787+0100 [SSHChannel session (0) on SSHService b'ssh-connection' on HoneyPotSSHTransport,1,79.26.242.29] ERROR: Failed to load filesystem
+	Traceback (most recent call last):
+	  File "/home/cowrie/cowrie/src/cowrie/shell/fs.py", line 114, in __init__
+	    with open(CowrieConfig.get("shell", "filesystem"), "rb") as f:
+	builtins.FileNotFoundError: [Errno 2] No such file or directory: 'custom.pickle'
+	
+2026-01-04T23:08:07.228904+0100 [SSHChannel session (0) on SSHService b'ssh-connection' on HoneyPotSSHTransport,1,79.26.242.29] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/conch/ssh/channel.py", line 162, in requestReceived
+	    return f(data)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/conch/ssh/session.py", line 80, in request_shell
+	    self.session = ISession(self.avatar)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/python/components.py", line 105, in _hook
+	    return factory(ob)
+	  File "/home/cowrie/cowrie/src/cowrie/shell/session.py", line 50, in __init__
+	    self.server.initFileSystem(self.avatar.home)
+	  File "/home/cowrie/cowrie/src/cowrie/shell/server.py", line 85, in initFileSystem
+	    self.fs = fs.HoneyPotFilesystem(self.arch, home)
+	  File "/home/cowrie/cowrie/src/cowrie/shell/fs.py", line 125, in __init__
+	    sys.exit(2)
+	builtins.SystemExit: 2
+	
+2026-01-04T23:08:40.964480+0100 [HoneyPotSSHTransport,1,79.26.242.29] Got remote error, code 11 reason: b'disconnected by user'
+2026-01-04T23:08:40.964974+0100 [HoneyPotSSHTransport,1,79.26.242.29] avatar root logging out
+2026-01-04T23:08:40.965146+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#info] connection lost
+2026-01-04T23:08:40.965221+0100 [HoneyPotSSHTransport,1,79.26.242.29] Connection lost after 44.7 seconds
+2026-01-04T23:08:42.051068+0100 [cowrie.ssh.factory.CowrieSSHFactory] New connection: 79.26.242.29:43418 (192.168.122.17:2222) [session: 62e42374cb84]
+2026-01-04T23:08:42.051863+0100 [HoneyPotSSHTransport,2,79.26.242.29] Remote SSH version: SSH-2.0-OpenSSH_10.2
+2026-01-04T23:08:42.213668+0100 [HoneyPotSSHTransport,2,79.26.242.29] SSH client hassh fingerprint: eeca2460550b9ded084ecf2f70a75356
+2026-01-04T23:08:42.214800+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#debug] kex alg=b'curve25519-sha256' key alg=b'ssh-ed25519'
+2026-01-04T23:08:42.214884+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#debug] outgoing: b'aes128-ctr' b'hmac-sha2-256' b'none'
+2026-01-04T23:08:42.214954+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#debug] incoming: b'aes128-ctr' b'hmac-sha2-256' b'none'
+2026-01-04T23:08:42.504959+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#debug] NEW KEYS
+2026-01-04T23:08:42.653618+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#debug] starting service b'ssh-userauth'
+2026-01-04T23:08:42.795999+0100 [cowrie.ssh.userauth.HoneyPotSSHUserAuthServer#debug] b'root' trying auth b'none'
+2026-01-04T23:08:42.943944+0100 [cowrie.ssh.userauth.HoneyPotSSHUserAuthServer#debug] b'root' trying auth b'publickey'
+2026-01-04T23:08:42.944397+0100 [HoneyPotSSHTransport,2,79.26.242.29] public key attempt for user b'root' of type b'ssh-ed25519' with fingerprint 56:14:5b:d3:25:0a:16:5f:f3:fd:ef:92:e6:b8:4f:69
+2026-01-04T23:08:42.944976+0100 [HoneyPotSSHTransport,2,79.26.242.29] public key login attempt for [b'root'] failed
+2026-01-04T23:08:42.945476+0100 [cowrie.ssh.userauth.HoneyPotSSHUserAuthServer#debug] b'root' failed auth b'publickey'
+2026-01-04T23:08:42.945566+0100 [cowrie.ssh.userauth.HoneyPotSSHUserAuthServer#debug] reason: ('Incorrect signature', None)
+2026-01-04T23:08:44.315588+0100 [cowrie.ssh.userauth.HoneyPotSSHUserAuthServer#debug] b'root' trying auth b'password'
+2026-01-04T23:08:44.316104+0100 [HoneyPotSSHTransport,2,79.26.242.29] login attempt [b'root'/b'a'] succeeded
+2026-01-04T23:08:44.316608+0100 [HoneyPotSSHTransport,2,79.26.242.29] Initialized emulated server as architecture: x86_64
+2026-01-04T23:08:44.316797+0100 [cowrie.ssh.userauth.HoneyPotSSHUserAuthServer#debug] b'root' authenticated with b'password'
+2026-01-04T23:08:44.316947+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#debug] starting service b'ssh-connection'
+2026-01-04T23:08:44.585195+0100 [cowrie.ssh.connection.CowrieSSHConnection#debug] got channel b'session' request
+2026-01-04T23:08:44.585474+0100 [cowrie.ssh.session.HoneyPotSSHSession#info] channel open
+2026-01-04T23:08:44.585584+0100 [cowrie.ssh.connection.CowrieSSHConnection#debug] got global b'no-more-sessions@openssh.com' request
+2026-01-04T23:08:44.862974+0100 [SSHChannel session (0) on SSHService b'ssh-connection' on HoneyPotSSHTransport,2,79.26.242.29] ERROR: Failed to load filesystem
+	Traceback (most recent call last):
+	  File "/home/cowrie/cowrie/src/cowrie/shell/fs.py", line 114, in __init__
+	    with open(CowrieConfig.get("shell", "filesystem"), "rb") as f:
+	builtins.FileNotFoundError: [Errno 2] No such file or directory: 'custom.pickle'
+	
+2026-01-04T23:08:44.863209+0100 [SSHChannel session (0) on SSHService b'ssh-connection' on HoneyPotSSHTransport,2,79.26.242.29] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/conch/ssh/channel.py", line 162, in requestReceived
+	    return f(data)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/conch/ssh/session.py", line 108, in request_pty_req
+	    self.session = ISession(self.avatar)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/python/components.py", line 105, in _hook
+	    return factory(ob)
+	  File "/home/cowrie/cowrie/src/cowrie/shell/session.py", line 50, in __init__
+	    self.server.initFileSystem(self.avatar.home)
+	  File "/home/cowrie/cowrie/src/cowrie/shell/server.py", line 85, in initFileSystem
+	    self.fs = fs.HoneyPotFilesystem(self.arch, home)
+	  File "/home/cowrie/cowrie/src/cowrie/shell/fs.py", line 125, in __init__
+	    sys.exit(2)
+	builtins.SystemExit: 2
+	
+2026-01-04T23:08:44.863509+0100 [twisted.conch.ssh.session#info] Getting shell
+2026-01-04T23:08:44.863646+0100 [SSHChannel session (0) on SSHService b'ssh-connection' on HoneyPotSSHTransport,2,79.26.242.29] ERROR: Failed to load filesystem
+	Traceback (most recent call last):
+	  File "/home/cowrie/cowrie/src/cowrie/shell/fs.py", line 114, in __init__
+	    with open(CowrieConfig.get("shell", "filesystem"), "rb") as f:
+	builtins.FileNotFoundError: [Errno 2] No such file or directory: 'custom.pickle'
+	
+2026-01-04T23:08:44.863750+0100 [SSHChannel session (0) on SSHService b'ssh-connection' on HoneyPotSSHTransport,2,79.26.242.29] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/python/log.py", line 96, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/python/log.py", line 80, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/python/context.py", line 117, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/python/context.py", line 82, in callWithContext
+	    return func(*args, **kw)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/conch/ssh/channel.py", line 162, in requestReceived
+	    return f(data)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/conch/ssh/session.py", line 80, in request_shell
+	    self.session = ISession(self.avatar)
+	  File "/home/cowrie/cowrie/cowrie-env/lib/python3.11/site-packages/twisted/python/components.py", line 105, in _hook
+	    return factory(ob)
+	  File "/home/cowrie/cowrie/src/cowrie/shell/session.py", line 50, in __init__
+	    self.server.initFileSystem(self.avatar.home)
+	  File "/home/cowrie/cowrie/src/cowrie/shell/server.py", line 85, in initFileSystem
+	    self.fs = fs.HoneyPotFilesystem(self.arch, home)
+	  File "/home/cowrie/cowrie/src/cowrie/shell/fs.py", line 125, in __init__
+	    sys.exit(2)
+	builtins.SystemExit: 2
+	
+2026-01-04T23:10:00.566067+0100 [-] Reading configuration from ['/home/cowrie/cowrie/etc/cowrie.cfg.dist', '/home/cowrie/cowrie/etc/cowrie.cfg']
+2026-01-04T23:10:00.729485+0100 [-] Python Version 3.11.2 (main, Apr 28 2025, 14:11:48) [GCC 12.2.0]
+2026-01-04T23:10:00.729525+0100 [-] Twisted Version 25.5.0
+2026-01-04T23:10:00.729544+0100 [-] Cowrie Version 2.9.5.dev1+g3f60101c7.d20260104
+2026-01-04T23:10:00.729555+0100 [-] Sensor UUID: 201298c2-e9b9-11f0-a649-525400efcb90
+2026-01-04T23:10:00.730584+0100 [-] Loaded output engine: jsonlog
+2026-01-04T23:10:00.731855+0100 [twisted.scripts._twistd_unix.UnixAppLogger#info] twistd 25.5.0 (/home/cowrie/cowrie/cowrie-env/bin/python 3.11.2) starting up.
+2026-01-04T23:10:00.731964+0100 [twisted.scripts._twistd_unix.UnixAppLogger#info] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-01-04T23:10:00.761566+0100 [-] CowrieSSHFactory starting on 2222
+2026-01-04T23:10:00.762391+0100 [cowrie.ssh.factory.CowrieSSHFactory#info] Starting factory <cowrie.ssh.factory.CowrieSSHFactory object at 0x7f93484d05d0>
+2026-01-04T23:10:00.814960+0100 [-] Ready to accept SSH connections
+2026-01-04T23:10:06.317249+0100 [cowrie.ssh.factory.CowrieSSHFactory] New connection: 79.26.242.29:33670 (192.168.122.17:2222) [session: f5a385261ff1]
+2026-01-04T23:10:06.318111+0100 [HoneyPotSSHTransport,0,79.26.242.29] Remote SSH version: SSH-2.0-OpenSSH_10.2
+2026-01-04T23:10:06.508981+0100 [HoneyPotSSHTransport,0,79.26.242.29] SSH client hassh fingerprint: eeca2460550b9ded084ecf2f70a75356
+2026-01-04T23:10:06.510010+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#debug] kex alg=b'curve25519-sha256' key alg=b'ssh-ed25519'
+2026-01-04T23:10:06.510088+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#debug] outgoing: b'aes128-ctr' b'hmac-sha2-256' b'none'
+2026-01-04T23:10:06.510148+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#debug] incoming: b'aes128-ctr' b'hmac-sha2-256' b'none'
+2026-01-04T23:10:06.868089+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#debug] NEW KEYS
+2026-01-04T23:10:07.041957+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#debug] starting service b'ssh-userauth'
+2026-01-04T23:10:07.292860+0100 [cowrie.ssh.userauth.HoneyPotSSHUserAuthServer#debug] b'root' trying auth b'none'
+2026-01-04T23:10:07.472009+0100 [cowrie.ssh.userauth.HoneyPotSSHUserAuthServer#debug] b'root' trying auth b'publickey'
+2026-01-04T23:10:07.472572+0100 [HoneyPotSSHTransport,0,79.26.242.29] public key attempt for user b'root' of type b'ssh-ed25519' with fingerprint 56:14:5b:d3:25:0a:16:5f:f3:fd:ef:92:e6:b8:4f:69
+2026-01-04T23:10:07.473176+0100 [HoneyPotSSHTransport,0,79.26.242.29] public key login attempt for [b'root'] failed
+2026-01-04T23:10:07.473719+0100 [cowrie.ssh.userauth.HoneyPotSSHUserAuthServer#debug] b'root' failed auth b'publickey'
+2026-01-04T23:10:07.473811+0100 [cowrie.ssh.userauth.HoneyPotSSHUserAuthServer#debug] reason: ('Incorrect signature', None)
+2026-01-04T23:10:08.299121+0100 [cowrie.ssh.userauth.HoneyPotSSHUserAuthServer#debug] b'root' trying auth b'password'
+2026-01-04T23:10:08.299821+0100 [HoneyPotSSHTransport,0,79.26.242.29] login attempt [b'root'/b's'] succeeded
+2026-01-04T23:10:08.300355+0100 [HoneyPotSSHTransport,0,79.26.242.29] Initialized emulated server as architecture: x86_64
+2026-01-04T23:10:08.300615+0100 [cowrie.ssh.userauth.HoneyPotSSHUserAuthServer#debug] b'root' authenticated with b'password'
+2026-01-04T23:10:08.300780+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#debug] starting service b'ssh-connection'
+2026-01-04T23:10:08.581994+0100 [cowrie.ssh.connection.CowrieSSHConnection#debug] got channel b'session' request
+2026-01-04T23:10:08.582312+0100 [cowrie.ssh.session.HoneyPotSSHSession#info] channel open
+2026-01-04T23:10:08.582458+0100 [cowrie.ssh.connection.CowrieSSHConnection#debug] got global b'no-more-sessions@openssh.com' request
+2026-01-04T23:10:08.912359+0100 [twisted.conch.ssh.session#info] Handling pty request: b'st-256color' (36, 71, 1065, 1368)
+2026-01-04T23:10:08.912550+0100 [SSHChannel session (0) on SSHService b'ssh-connection' on HoneyPotSSHTransport,0,79.26.242.29] Terminal Size: 71 36
+2026-01-04T23:10:08.913106+0100 [twisted.conch.ssh.session#info] Getting shell
+2026-01-04T23:10:40.216124+0100 [HoneyPotSSHTransport,0,79.26.242.29] CMD: ls
+2026-01-04T23:10:40.216759+0100 [HoneyPotSSHTransport,0,79.26.242.29] Command found: ls 
+2026-01-04T23:10:47.615449+0100 [HoneyPotSSHTransport,0,79.26.242.29] CMD: ciaooooooo
+2026-01-04T23:10:47.616217+0100 [HoneyPotSSHTransport,0,79.26.242.29] Command not found: ciaooooooo 
+2026-01-04T23:11:03.450970+0100 [twisted.internet.base#info] Received SIGTERM, shutting down.
+2026-01-04T23:11:03.452837+0100 [-] (TCP Port 2222 Closed)
+2026-01-04T23:11:03.453015+0100 [cowrie.ssh.factory.CowrieSSHFactory#info] Stopping factory <cowrie.ssh.factory.CowrieSSHFactory object at 0x7f93484d05d0>
+2026-01-04T23:11:03.453568+0100 [HoneyPotSSHTransport,0,79.26.242.29] Closing TTY Log: var/lib/cowrie/tty/bdf83ea4fc0615dc2c6d30b8e4bdb8f5d110cc0c3d8ef40817776cd4cb4ea41d after 54.5 seconds
+2026-01-04T23:11:03.454065+0100 [HoneyPotSSHTransport,0,79.26.242.29] avatar root logging out
+2026-01-04T23:11:03.454129+0100 [cowrie.ssh.transport.HoneyPotSSHTransport#info] connection lost
+2026-01-04T23:11:03.454184+0100 [HoneyPotSSHTransport,0,79.26.242.29] Connection lost after 57.1 seconds
+2026-01-04T23:11:03.454590+0100 [twisted.internet.base#info] Main loop terminated.
+2026-01-04T23:11:03.454802+0100 [twisted.scripts._twistd_unix.UnixAppLogger#info] Server Shut Down.

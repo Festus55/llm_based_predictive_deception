@@ -1,4 +1,3 @@
-LOGS/
 venv/
 tex/
 #datasets/sliding_windows_long_kaggle_sessions.json
