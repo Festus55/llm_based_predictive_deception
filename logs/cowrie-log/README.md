@@ -1,0 +1,2 @@
+This log directory contains every log from the LLM based predictive decepion Cowrie.
+Note that before ` 01-27 09:18:11` the deceptive engine is based on Gemma 3 4B, while after is based on Gemma 3 12B.
