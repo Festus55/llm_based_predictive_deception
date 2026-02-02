@@ -126,6 +126,8 @@ This architecture allows **A/B testing** between LLM-enhanced and standard honey
 ```
 llm_based_predictive_deception/
 ├── README.md
+├── setup_host.sh
+├── setup_vm.sh
 ├── adapters
 │   ├── README.md
 │   ├── gemma-3-12b/
@@ -138,12 +140,10 @@ llm_based_predictive_deception/
 │   │   └── ...
 │   ├── gemma3_chat_template.jinja
 │   └── startup_API_server.sh
-├── canary
-│   ├── README.md
-│   ├── fetch-canary.py
-│   └── list-mails.py
+├── canarytokens
+│   └── ...
 ├── canarytokens-docker
-│   ├── ...
+│   └── ...
 ├── dataset
 │   ├── README.md
 │   ├── enriched_data
@@ -211,7 +211,7 @@ llm_based_predictive_deception/
     │   │   │   │   └── templates          # Added
     │   │   │   │       └── template.json
     └── cowrie-standard
-        ├── ...
+        └── ...
 ```
 
 ## 3. Supported Trap Types
@@ -296,7 +296,6 @@ sudo bash setup_vm.sh
 ```
 - sets up and enables the connection switcher as user `person` (systemd service `connection-switcher`).
 - sets up Cowrie with LLM and the standard Cowrie (2224) under user `cowrie`.
--
 
 ---
 
