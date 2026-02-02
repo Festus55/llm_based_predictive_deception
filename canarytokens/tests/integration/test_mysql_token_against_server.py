@@ -1,0 +1,86 @@
+import os
+import subprocess
+from os import remove
+from pathlib import Path
+from time import sleep
+
+from pydantic import HttpUrl
+from requests import get
+
+from canarytokens.canarydrop import Canarydrop
+from canarytokens.models import (
+    Memo,
+    MySQLTokenHistory,
+    MySQLTokenRequest,
+    MySQLTokenResponse,
+)
+from canarytokens.mysql import make_canary_mysql_dump
+from canarytokens.settings import FrontendSettings, SwitchboardSettings
+from canarytokens.utils import strtobool
+
+from tests.utils import create_token, get_token_history, server_config
+
+
+def test_mysql_token(
+    webhook_receiver: str,
+    frontend_settings: FrontendSettings,
+    settings: SwitchboardSettings,
+):  # pragma: no cover
+
+    token_request = MySQLTokenRequest(
+        webhook_url=HttpUrl(url=webhook_receiver, scheme="https"),
+        memo=Memo("Test stuff break stuff test stuff sometimes build stuff"),
+    )
+    resp = create_token(token_request)
+    token_info = MySQLTokenResponse(**resp)
+    gz_file = f"{token_info.token}_mysql_dump.sql.gz"
+    if server_config.live:
+        url = f"{server_config.server_url}/download?fmt=my_sql&token={token_info.token}&auth={token_info.auth_token}&encoded=true"
+        with get(url) as rc:
+            with open(gz_file, "wb") as f:
+                f.write(rc.content)
+    else:
+        assert token_info.usage is not None
+        assert token_info.usage[-8:] == "REPLICA;"
+        listen_domain = os.getenv("TEST_HOST", "app")
+        mysql_usage = Canarydrop.generate_mysql_usage(
+            token=token_info.token,
+            domain=listen_domain,
+            port=settings.CHANNEL_MYSQL_PORT,
+            encoded=settings.CHANNEL_MYSQL_PORT,
+        )
+
+        content = make_canary_mysql_dump(
+            mysql_usage=mysql_usage,
+            template=Path(frontend_settings.TEMPLATES_PATH) / "mysql_tables.zip",
+        )
+        with open(gz_file, "wb") as f:
+            f.write(content)
+    _ = subprocess.run(["gzip", "-d", gz_file], capture_output=True)
+    dump_file = gz_file[:-3]
+
+    # Trigger the token
+    command = ["mysql", "-h127.0.0.1", "-uroot"]
+
+    if not strtobool(os.getenv("CI", "False")):
+        command[command.index("-h127.0.0.1")] = "-hmysql"
+    else:
+        command.append("-P3307")
+
+    command_input = bytes(
+        f"drop database IF EXISTS tmp_db;\ncreate database tmp_db;\nuse tmp_db;\nsource {dump_file};\ndrop database IF EXISTS tmp_db;",
+        "utf-8",
+    )
+    stuff = subprocess.run(command, input=command_input, capture_output=True)
+    print(f"\nmysql: {stuff}")
+    remove(dump_file)
+
+    # the v3 frontend in docker runs slower than this test,
+    # so we need to wait to let it save the hit before requesting it
+    sleep(1)
+
+    # Check that the returned history has a hit
+    history_resp = get_token_history(token_info)
+    token_history = MySQLTokenHistory(**history_resp)
+
+    assert len(token_history.hits) == 1

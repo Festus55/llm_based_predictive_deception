@@ -1,5 +1,7 @@
 venv/
 tex/
+DATA/
+nohup.out
 #datasets/sliding_windows_long_kaggle_sessions.json
 
 #adapters/gemma-3-12b-2k/adapter_model.safetensors

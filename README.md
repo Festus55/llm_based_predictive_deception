@@ -276,128 +276,27 @@ Configuration:
 
 ### Phase 2: VM configuration
 
-Once the VM is installed and running, you need to configure the internal honeypot logic.
+Once the VM is installed and running, configure the internal honeypot logic.
 
 1. **Transfer files to the VM:**
-From your Host machine, copy the repository and the setup script to the VM:
 ```bash
-# Note: Port 6453 on Host is forwarded to Port 22 on VM
 scp -P 6453 -r $(pwd) person@192.168.122.17:/home/person/repo
 scp -P 6453 setup_vm.sh person@192.168.122.17:/home/person/
 ```
 
-connect to the VM:
-`ssh -p 6453 person@192.168.122.17`
-
-#### Connection Switcher Setup
-
+Connect to the VM:
 ```bash
-scp vm-with-cowrie-honeypot/connection_switcher.py cowrie@<VM_IP>:/home/cowrie/
-python3 connection_switcher.py &
+ssh -p 6453 person@192.168.122.17
 ```
 
-#### Cowrie with LLM (Port 2223)
-
-1. Update the system:
-   ```bash
-   sudo apt update && sudo apt upgrade -y
-   ```
-
-2. Install Cowrie dependencies:
-   ```bash
-   sudo apt install -y git python3-pip python3-venv libssl-dev libffi-dev \
-       build-essential libpython3-dev python3-minimal authbind
-   ```
-
-3. Create the cowrie user and clone the repository:
-   ```bash
-   sudo adduser --disabled-password cowrie
-   sudo su - cowrie
-
-   git clone https://github.com/cowrie/cowrie cowrie-llm
-   cd cowrie-llm
-   ```
-
-4. Set up the virtual environment:  
-   ```bash
-   python3 -m venv cowrie-env
-   source cowrie-env/bin/activate
-
-   pip install --upgrade pip
-   pip install -e .
-   
-   # Install additional dependencies for LLM integration
-   pip install treq pikepdf reportlab
-   ```
-
-5. Configure Cowrie to listen on port 2223:
-   ```bash
-   cp etc/cowrie. cfg.dist etc/cowrie.cfg
-   # Edit etc/cowrie.cfg and set:
-   # listen_endpoints = tcp: 2223:interface=0.0.0.0
-   ```
-
-6. **Install modified Cowrie components with LLM support** (from this repository):
-   ```bash
-   # Copy modified files to Cowrie installation
-   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/shell/honeypot.py src/cowrie/shell/honeypot.py
-   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/data/fs.pickle src/cowrie/data/fs.pickle
-   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/commands/curl.py src/cowrie/commands/curl.py
-   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/commands/wget.py src/cowrie/commands/wget.py
-   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/commands/chmod.py src/cowrie/commands/chmod.py
-   
-   # Copy templates
-   mkdir -p src/cowrie/shell/templates
-   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/shell/templates/template.json src/cowrie/shell/templates/template.json
-   ```
-
-7. Start Cowrie with LLM:
-   ```bash
-   cowrie start
-   # To stop:  bin/cowrie stop
-   ```
-
-#### Standard Cowrie (Port 2224)
-
-This instance is a standard Cowrie honeypot that can still generate canarys via wget/curl commands, but has **no LLM connection**.
-
-1. Clone a separate Cowrie instance: 
-   ```bash
-   sudo su - cowrie
-   git clone https://github.com/cowrie/cowrie cowrie-standard
-   cd cowrie-standard
-   ```
-
-2. Set up the virtual environment:
-   ```bash
-   python3 -m venv cowrie-env
-   source cowrie-env/bin/activate
-
-   pip install --upgrade pip
-   pip install -e .
-   pip install treq pikepdf reportlab
-   ```
-
-3. Configure Cowrie to listen on port 2224:
-   ```bash
-   cp etc/cowrie.cfg.dist etc/cowrie.cfg
-   # Edit etc/cowrie.cfg and set:
-   # listen_endpoints = tcp:2224:interface=0.0.0.0
-   ```
-
-4. **Install modified Cowrie components WITHOUT LLM** (wget/curl canary support only):
-   ```bash
-   # Copy only the files needed for basic canary generation
-   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/data/fs.pickle src/cowrie/data/fs.pickle
-   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/commands/curl.py src/cowrie/commands/curl.py
-   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/commands/wget.py src/cowrie/commands/wget.py
-   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/commands/chmod.py src/cowrie/commands/chmod.py
-   ```
-
-5. Start Standard Cowrie:
-   ```bash
-   cowrie start
-   ```
+2. **Run the VM setup script which automates the connection switcher and the cowrie instances:**
+```bash
+cd /home/person
+sudo bash setup_vm.sh
+```
+- sets up and enables the connection switcher as user `person` (systemd service `connection-switcher`).
+- sets up Cowrie with LLM and the standard Cowrie (2224) under user `cowrie`.
+-
 
 ---
 
@@ -405,7 +304,7 @@ This instance is a standard Cowrie honeypot that can still generate canarys via 
 
 #### 1. Canarytokens configuration
 
-On `canarytokens-docker` folder, set your settings modyfing `FRONTEND.env` and `SWITCHBOARD.env`
+On `canarytokens-docker` folder, set your settings modifying `FRONTEND.env` and `SWITCHBOARD.env`
 
 e.g.:
 ```bash
@@ -424,16 +323,12 @@ To use the AWS Key traps:
 
 #### 3. Start the LLM Server
 
-The **LLM server** runs on the **host**, which access the GPU.
+The **LLM server** runs on the **host**, which accesses the GPU.
 
 ```bash
 # on the HOST
 ./adapters/startup_API_server.sh
 ```
-
-#### 4. Launch the Honeypot
-
-for each of the cowrie instances (`cowrie` and `cowrie-standard`), active the relative virtual environment, and do `cowrie start`.
 
 ---
 
