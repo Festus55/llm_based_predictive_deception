@@ -348,7 +348,7 @@ python3 connection_switcher.py &
    
    # Copy templates
    mkdir -p src/cowrie/shell/templates
-   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/shell/templates/cowrie_templates_master.json src/cowrie/shell/templates/template.json
+   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/shell/templates/template.json src/cowrie/shell/templates/template.json
    ```
 
 7. Start Cowrie with LLM:
@@ -428,7 +428,7 @@ The **LLM server** runs on the **host**, which access the GPU.
 
 ```bash
 # on the HOST
-/adapters/startup_API_server.sh
+./adapters/startup_API_server.sh
 ```
 
 #### 4. Launch the Honeypot
