@@ -207,7 +207,6 @@ llm_based_predictive_deception/
     │   │   │   │   └── wget.py  # Modified
     │   │   │   ├── shell
     │   │   │   │   ├── ...
-    │   │   │   │   ├── fs.py              # Modified
     │   │   │   │   ├── honeypot.py        # Modified
     │   │   │   │   └── templates          # Added
     │   │   │   │       └── template.json
@@ -341,15 +340,15 @@ python3 connection_switcher.py &
 6. **Install modified Cowrie components with LLM support** (from this repository):
    ```bash
    # Copy modified files to Cowrie installation
-   cp scripts/cowrie_app/honeypot.py src/cowrie/shell/honeypot.py
-   cp scripts/cowrie_app/fs. py src/cowrie/shell/fs.py
-   cp scripts/cowrie_app/curl.py src/cowrie/commands/curl.py
-   cp scripts/cowrie_app/wget.py src/cowrie/commands/wget.py
-   cp scripts/cowrie_app/chmod.py src/cowrie/commands/chmod.py
+   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/shell/honeypot.py src/cowrie/shell/honeypot.py
+   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/data/fs.pickle src/cowrie/data/fs.pickle
+   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/commands/curl.py src/cowrie/commands/curl.py
+   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/commands/wget.py src/cowrie/commands/wget.py
+   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/commands/chmod.py src/cowrie/commands/chmod.py
    
    # Copy templates
    mkdir -p src/cowrie/shell/templates
-   cp scripts/cowrie_app/cowrie_templates_master.json src/cowrie/shell/templates/template.json
+   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/shell/templates/cowrie_templates_master.json src/cowrie/shell/templates/template.json
    ```
 
 7. Start Cowrie with LLM:
@@ -389,10 +388,10 @@ This instance is a standard Cowrie honeypot that can still generate canarys via 
 4. **Install modified Cowrie components WITHOUT LLM** (wget/curl canary support only):
    ```bash
    # Copy only the files needed for basic canary generation
-   cp scripts/cowrie_app/fs.py src/cowrie/shell/fs.py
-   cp scripts/cowrie_app/curl. py src/cowrie/commands/curl.py
-   cp scripts/cowrie_app/wget.py src/cowrie/commands/wget.py
-   cp scripts/cowrie_app/chmod.py src/cowrie/commands/chmod. py
+   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/data/fs.pickle src/cowrie/data/fs.pickle
+   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/commands/curl.py src/cowrie/commands/curl.py
+   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/commands/wget.py src/cowrie/commands/wget.py
+   cp vm-with-cowrie-honeypot/cowrie/src/cowrie/commands/chmod.py src/cowrie/commands/chmod.py
    ```
 
 5. Start Standard Cowrie:
@@ -429,7 +428,7 @@ The **LLM server** runs on the **host**, which access the GPU.
 
 ```bash
 # on the HOST
-./scripts/cowrie_app/startup_API_server.sh
+/adapters/startup_API_server.sh
 ```
 
 #### 4. Launch the Honeypot
@@ -464,7 +463,7 @@ for each of the cowrie instances (`cowrie` and `cowrie-standard`), active the re
 | File | Purpose |
 |------|---------|
 | `vm-with-cowrie-honeypot/connection_switcher.py` | Connection Switcher configuration (ports, backends) |
-| `scripts/cowrie_app/honeypot.py` | LLM API URL, Canarytoken API URL, webhook IP (Cowrie:2223 only) |
+| `vm-with-cowrie-honeypot/cowrie/src/cowrie/shell/honeypot.py` | LLM API URL, Canarytoken API URL, webhook IP (Cowrie:2223 only) |
 | `etc/cowrie.cfg` | Cowrie configuration (separate for each instance) |
 | `listener/listener9000.py` | MongoDB connection string |
 | `save-log-cowrie.py` | SSH connection to VM, polling interval |
@@ -511,8 +510,8 @@ tail -f /home/cowrie/cowrie-standard/var/log/cowrie/cowrie.log
 # Webhook listener logs
 tail -f valid_alerts.log
 
-# vLLM server logs
-tail -f scripts/cowrie_app/vllm_server.log
+# vLLM server logs (relative to where startup_API_server.sh was launched)
+tail -f ./vllm_server.log
 
 # Docker container logs
 docker logs -f frontend
