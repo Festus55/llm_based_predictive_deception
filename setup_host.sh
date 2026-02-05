@@ -37,7 +37,7 @@ firewall-cmd --permanent --zone=public --add-interface=$PUB_IFACE
 
 # tcp ports
 firewall-cmd --permanent --zone=public \
-    --add-port={80/tcp,9000/tcp,6453/tcp,8008/tcp,8082/tcp,6443/tcp}
+    --add-port={9000/tcp,6443/tcp,8008/tcp,4321/tcp,22/tcp,6453/tcp}
 # udp port
 firewall-cmd --permanent --zone=public --add-port=51820/udp
 
@@ -54,7 +54,7 @@ firewall-cmd --permanent --zone=public \
 
 # libvirt internal zone
 firewall-cmd --permanent --zone=libvirt --add-port=8000/tcp # LLM API
-firewall-cmd --permanent --zone=libvirt --add-port=80/tcp   # Canary Server
+firewall-cmd --permanent --zone=libvirt --add-port=8082/tcp # Canary Server
 
 firewall-cmd --reload
 echo "[+] Firewall configured."
